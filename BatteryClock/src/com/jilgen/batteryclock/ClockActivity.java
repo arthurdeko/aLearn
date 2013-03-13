@@ -35,6 +35,5 @@ public class ClockActivity extends Activity {
     }
     
     public void updateScreen(View view) {
-    	textOutput.Text="clicked";
     }
 }
