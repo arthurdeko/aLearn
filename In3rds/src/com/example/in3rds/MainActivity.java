@@ -8,6 +8,9 @@ import android.view.Menu;
 import android.widget.TextView;
 import android.telephony.TelephonyManager;
 import android.telephony.PhoneStateListener;
+import android.telephony.SignalStrength;
+import java.lang.System;
+import com.example.in3rds.StatContainer;
 
 public class MainActivity extends Activity {
 	TextView textDisplay;
@@ -22,20 +25,27 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 		textDisplay = (TextView) findViewById(R.id.textView1);
 		
+		textDisplay.setText("Started \n");
+		
 		//create Broadcast Receiver
 		///intent filters
 		//battery
 		
 		//get signal strength
 		phoneListener=new android.telephony.PhoneStateListener() {
-		     public void onSignalStrengthsChanged(int asu) { 
-		    	 Log.d(TAG, "Signal Strength "+asu );
-		    	 textDisplay.setText( ""+asu );
+		     public void onSignalStrengthsChanged(SignalStrength signalStrength) { 
+		    	 Log.d(TAG, "Signal Strength "+signalStrength.getGsmSignalStrength() );
+		    	 textDisplay.append( System.currentTimeMillis()+" "+signalStrength.getGsmSignalStrength()+"\n" );
+		 		 StatContainer statContainer = new StatContainer();
+				 statContainer.Name="Signal Strength";
+				 statContainer.setValue( signalStrength.getGsmSignalStrength() );
+				 statContainer.Time=System.currentTimeMillis();
+				 Log.d(TAG, statContainer.asString() );
 		     }
 		};
 		telephonyManager = (TelephonyManager)this.getSystemService(Context.TELEPHONY_SERVICE);
-		Log.d(TAG, "string" );
 		telephonyManager.listen(phoneListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS );
+
 	}
 
 	@Override
