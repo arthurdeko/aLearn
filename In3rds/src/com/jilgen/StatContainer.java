@@ -1,4 +1,4 @@
-package com.example.in3rds;
+package com.jilgen;
 
 public class StatContainer {
 	public long Time;
