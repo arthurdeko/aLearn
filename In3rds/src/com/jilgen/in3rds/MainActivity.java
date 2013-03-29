@@ -18,6 +18,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	static final String TAG = "In3rds";
 	InternalStatistics internalStatistics;
 	SignalStrengthListener signalStrength;
+	BatteryStrength batteryStrength;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +30,7 @@ public class MainActivity extends Activity implements OnClickListener {
         button.setOnClickListener(this);
 		textDisplay.setText("Started \n");
 		signalStrength=new SignalStrengthListener( this );
+		batteryStrength=new BatteryStrength( this );
 	}
 
 	@Override
@@ -39,7 +41,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	}
 
     public void onClick(View v) {
-		statDisplay.setText( "Signal strength "+this.signalStrength.value );
+		statDisplay.setText( "Signal: "+this.signalStrength.value+" Battery: "+this.batteryStrength.value );
     }
 }
 
