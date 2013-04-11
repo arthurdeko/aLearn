@@ -30,22 +30,6 @@ public class LocationService extends IntentService {
 	public int onStartCommand(final Intent intent, final int flags, final int startId) {
 
 		Log.d(TAG,"Service Started");
-		
-		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		final boolean gpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-		
-	    if (!gpsEnabled) {
-	        // Build an alert dialog here that requests that the user enable
-	        // the location services, then when the user clicks the "OK" button,
-	        // call enableLocationSettings()
-	    	Toast toast = Toast.makeText(this, "GPS not enabled", Toast.LENGTH_SHORT);
-	    	toast.show();
-	    } else {
-	    	locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-	    	        10000,          // 10-second interval.
-	    	        10,             // 10 meters.
-	    	        listener);
-	    }
 
 	    return super.onStartCommand(intent, flags, startId);
 

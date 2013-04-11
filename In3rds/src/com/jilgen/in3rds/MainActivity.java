@@ -9,7 +9,7 @@ import android.view.Menu;
 import android.widget.TextView;
 import com.jilgen.in3rds.InternalStatistics;
 import com.jilgen.in3rds.SignalStrengthListener;
-import com.jilgen.in3rds.LocationService;
+import com.jilgen.in3rds.SimpleIntentService;
 import android.widget.Button;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -31,18 +31,22 @@ public class MainActivity extends Activity implements OnClickListener {
 	TextView batteryDisplay;
 	TextView batteryHistory;
 
+	static final String UPDATE_BATTERY_STRENGTH = "@string/update_battery_strength";
 	static final String TAG = "In3rds";
+    private static Context context;
 	InternalStatistics internalStatistics;
 	SignalStrengthListener signalStrength;
 	BatteryStrength batteryStrength;
 	boolean isBound;
 	LocationManager locationManager;
 	Double longitude, latitude;
-	BatteryValues batteryValues = new BatteryValues();
+	public BatteryValues batteryValues = new BatteryValues();
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+        MainActivity.context = getApplicationContext();
+        
 		setContentView(R.layout.activity_main);
 		signalDisplay = (TextView) findViewById(R.id.textViewSignal);
 		batteryDisplay = (TextView) findViewById(R.id.textViewBattery);	
@@ -69,8 +73,15 @@ public class MainActivity extends Activity implements OnClickListener {
 	    	        listener);
 	    }
 	    
+	    Intent batteryStrengthIntent = new Intent(this, SimpleIntentService.class );
+	    this.startService(batteryStrengthIntent);
+	    
 	}
 
+	public void updateBatteryValues ( String value ) {
+		this.batteryValues.addValue(value);
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -103,18 +114,15 @@ public class MainActivity extends Activity implements OnClickListener {
 		}
 	};
 	
-
+    public static Context getAppContext() {
+        return MainActivity.context;
+    }
+	
     public void onClick(View view) {
 		//signalDisplay.setText( "Signal: "+this.signalStrength.value+" Battery: "+this.batteryStrength.value );
 		signalDisplay.setText( "Signal: "+this.signalStrength.value );
 		batteryDisplay.setText("Battery: "+this.batteryStrength.value );
-		String batteryString = ""+this.batteryStrength.value;
-		this.batteryValues.addValue(batteryString);
-		Log.d(TAG, batteryValues.toString());
-		while (true) {
-			batteryHistory.setText(batteryValues.toString());
-			Thread.sleep(1000);
-		}
+
     }
     
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
