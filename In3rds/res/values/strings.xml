@@ -5,5 +5,8 @@
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
     <string name="poll_button">Poll</string>
+    <string name="battery_switch">Battery Strength</string>
+    <string name="signal_switch">Signal</string>
+    <string name="location_switch">Location</string>
 
 </resources>

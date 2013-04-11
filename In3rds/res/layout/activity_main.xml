@@ -6,13 +6,14 @@
             android:id="@+id/button1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/textView1"
+            android:layout_alignLeft="@+id/textViewBattery"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="22dp"
-            android:text="@string/poll_button" />
+            android:text="@string/poll_button" 
+            android:onClick="onClick"/>
 
         <TextView
-            android:id="@+id/textView1"
+            android:id="@+id/textViewBattery"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -20,11 +21,38 @@
             android:paddingTop="5dp" />
 
         <TextView
-            android:id="@+id/textView2"
-            android:textColor="#f768"
+            android:id="@+id/textViewSignal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignRight="@+id/button1"
-            android:layout_below="@+id/textView1" />
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/textViewBattery"
+            android:textColor="#f768" />
+
+        <TextView
+            android:id="@+id/textViewLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/textViewSignal" />
+
+        <ToggleButton
+            android:id="@+id/toggleButton1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/button1"
+            android:layout_marginRight="14dp"
+            android:onClick="onToggleClicked" />
+
+        <TextView
+            android:id="@+id/batteryHistoryView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/textViewLocation"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="18dp" />
     
 </RelativeLayout>
