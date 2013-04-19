@@ -17,14 +17,21 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.util.Log;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Messenger;
 import com.jilgen.in3rds.BatteryValues;
+import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 import java.lang.Thread;
+import android.widget.ImageView;
+import android.graphics.drawable.*;
+import com.jilgen.in3rds.StatGraph;
+import java.util.List;
 
-public class MainActivity extends Activity implements OnClickListener {
+public class MainActivity extends Activity {
 	TextView textDisplay;
 	TextView locationDisplay;
 	TextView signalDisplay;
@@ -36,7 +43,7 @@ public class MainActivity extends Activity implements OnClickListener {
     private static Context context;
 	InternalStatistics internalStatistics;
 	SignalStrengthListener signalStrength;
-	BatteryStrength batteryStrength;
+	//BatteryStrength batteryStrength;
 	boolean isBound;
 	LocationManager locationManager;
 	Double longitude, latitude;
@@ -45,17 +52,22 @@ public class MainActivity extends Activity implements OnClickListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+    	Log.d(TAG, "sasad");
+    	
         MainActivity.context = getApplicationContext();
+ 
+        // Initialize database
+    	//StatsDatabaseHandler db = new StatsDatabaseHandler(context);
+    	//db.initialize();
         
 		setContentView(R.layout.activity_main);
-		signalDisplay = (TextView) findViewById(R.id.textViewSignal);
-		batteryDisplay = (TextView) findViewById(R.id.textViewBattery);	
-		batteryHistory = (TextView) findViewById(R.id.batteryHistoryView);
+		final RelativeLayout mainLayout = (RelativeLayout) findViewById(R.id.main_layout);
 		
-        Button button = (Button)findViewById(R.id.button1);
-        button.setOnClickListener(this);
+		signalDisplay = (TextView) findViewById(R.id.textViewSignal);
+		batteryDisplay = (TextView) findViewById(R.id.textViewBattery);
+		
 		signalStrength=new SignalStrengthListener( this );
-		batteryStrength=new BatteryStrength( this );
 		
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		final boolean gpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
@@ -72,10 +84,44 @@ public class MainActivity extends Activity implements OnClickListener {
 	    	        10,             // 10 meters.
 	    	        listener);
 	    }
+
+        
+	    StatGraph statsGraphView = new StatGraph(this);
+ 
+	    StatsDatabaseHandler db = new StatsDatabaseHandler(this);
+	    List<InternalStats> records = db.getAllBatteryStrengths();
+	    Log.d(TAG, "Records count in Main "+records.size());
+	    statsGraphView.setRecords(records);
+	    mainLayout.addView(statsGraphView);
+
+	    	    
+	    final BatteryStrength batteryStrength = new BatteryStrength(this);
+	    final Handler handler = new Handler();
+	    final Runnable r = new Runnable()
+	    {
+	        public void run() 
+	        {
+	        	
+	            handler.postDelayed(this, 2000);
+	            /*
+	            Log.d(TAG, "BS "+batteryStrength.getValue());
+	            
+	        	StatsDatabaseHandler db = new StatsDatabaseHandler(context);
+	            db.addStat(new InternalStats(batteryStrength.getValue()));	        	
+	            List<InternalStats> stats = db.getAllBatteryStrengths();
+	            Log.d(TAG, Integer.toString(stats.size()));
+	            
+	            db.close();
+	            */        
+
+	        }
+	    };
 	    
-	    Intent batteryStrengthIntent = new Intent(this, SimpleIntentService.class );
-	    this.startService(batteryStrengthIntent);
+	    handler.postDelayed(r, 2000);
 	    
+	    //Intent batteryStrengthIntent = new Intent(this, SimpleIntentService.class );
+	    //this.startService(batteryStrengthIntent);
+        
 	}
 
 	public void updateBatteryValues ( String value ) {
@@ -117,13 +163,6 @@ public class MainActivity extends Activity implements OnClickListener {
     public static Context getAppContext() {
         return MainActivity.context;
     }
-	
-    public void onClick(View view) {
-		//signalDisplay.setText( "Signal: "+this.signalStrength.value+" Battery: "+this.batteryStrength.value );
-		signalDisplay.setText( "Signal: "+this.signalStrength.value );
-		batteryDisplay.setText("Battery: "+this.batteryStrength.value );
-
-    }
     
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (requestCode == 0) {
@@ -136,10 +175,6 @@ public class MainActivity extends Activity implements OnClickListener {
                 // Handle cancel
             }
         }
-    }
-    
-    public void onToggleClicked(View view) {
-    	Log.d(TAG, "Toggle clicked");
     }
     
 }

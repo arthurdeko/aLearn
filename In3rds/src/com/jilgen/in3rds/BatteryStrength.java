@@ -8,7 +8,7 @@ import android.os.BatteryManager;
 import android.util.Log;
 
 public class BatteryStrength extends BroadcastReceiver {
-    int value = -1;
+    private int _value = -1;
     double ftemp = 0;
     static final String TAG = "BatteryStrength";
 	
@@ -17,10 +17,20 @@ public class BatteryStrength extends BroadcastReceiver {
         context.registerReceiver(this, filter);
 	}
 	
+	public int getValue() {
+		Log.d(TAG, "Value requested "+this._value);
+		return this._value;
+	}
+	
+	public void setValue( int _value) {
+		this._value=_value;
+	}
+	
     @Override
     public void onReceive(Context context, Intent intent) {
-        value = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
-        String valueString = Integer.toString(value);
+        this.setValue(intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1));
+        String valueString = Integer.toString(this._value);
+        Log.d(TAG, "As int "+this._value);
         Log.i(TAG, "Battery strength "+valueString);
     }
 }

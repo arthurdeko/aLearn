@@ -29,7 +29,7 @@ public class SimpleIntentService extends IntentService {
 		Log.i(TAG,"Service Started");
 		Log.d(TAG, intent.toString());
 
-		String batteryString = ""+this.batteryStrength.value;
+		String batteryString = ""+this.batteryStrength.getValue();
 		this.batteryValues.addValue(batteryString);
 		this.batteryValues.addValue(batteryString);
 		this.batteryValues.addValue(batteryString);
