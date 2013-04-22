@@ -4,51 +4,24 @@
     android:layout_height="fill_parent"
     android:scrollbarAlwaysDrawVerticalTrack="true"
     android:scrollbars="vertical" >
-    
-        <TextView
-            android:id="@+id/textViewBattery"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:paddingTop="5dp" />
-
-        <TextView
-            android:id="@+id/textViewSignal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
-            android:layout_below="@+id/textViewBattery"
-            android:textColor="#f768" />
-
-        <TextView
-            android:id="@+id/textViewLocation"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
-            android:layout_below="@+id/textViewSignal" />
-
-        <TextView
-            android:id="@+id/batteryHistoryView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/textViewLocation"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="18dp" />
 
         <Button
             android:id="@+id/button1"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/textViewSignal"
-            android:layout_alignBottom="@+id/textViewSignal"
             android:layout_alignParentRight="true"
             android:layout_marginRight="20dp"
             android:text="reset"
             android:onClick="onClickReset" />
+
+        <TextView
+            android:id="@+id/textViewInterval"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/button1"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="51dp"
+            android:paddingTop="5dp" />
     
 </RelativeLayout>

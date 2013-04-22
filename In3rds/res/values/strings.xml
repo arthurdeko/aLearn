@@ -9,5 +9,7 @@
     <string name="signal_switch">Signal</string>
     <string name="location_switch">Location</string>
     <string name="update_battery_strength">UpdateBatteryStrength</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="interval_settings">Polling Interval</string>
 
 </resources>

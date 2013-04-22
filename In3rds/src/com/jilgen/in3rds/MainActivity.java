@@ -24,27 +24,22 @@ import com.jilgen.in3rds.StatGraph;
 import com.jilgen.in3rds.StatsDatabaseHandler;
 import com.jilgen.in3rds.BatteryStrength;
 import com.jilgen.in3rds.InternalStats;
-import com.jilgen.in3rds.IntervalSettingActivity;
+import com.jilgen.in3rds.SettingsActivity;
+import android.content.SharedPreferences;
 import android.view.MenuItem;
 import java.util.List;
 
 public class MainActivity extends Activity {
-	TextView textDisplay;
-	TextView locationDisplay;
-	TextView signalDisplay;
-	TextView batteryDisplay;
-	TextView batteryHistory;
-
+	
 	static final String UPDATE_BATTERY_STRENGTH = "@string/update_battery_strength";
 	static final String TAG = "In3rds";
+	static final String PREFS_FILE = "In3rdsPrefs";
     private static Context context;
 	InternalStatistics internalStatistics;
-	SignalStrengthListener signalStrength;
 	//BatteryStrength batteryStrength;
+	private TextView intervalView;
+	private SharedPreferences settings;
 	boolean isBound;
-	LocationManager locationManager;
-	Double longitude, latitude;
-	public BatteryValues batteryValues = new BatteryValues();
 	private StatGraph statsGraphView;
 	public int pollingInterval = 10000;
 	
@@ -52,32 +47,18 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		this.settings = getSharedPreferences(PREFS_FILE,0);		
+		this.pollingInterval = settings.getInt("interval", 100000);
+		
         MainActivity.context = getApplicationContext();
          
 		setContentView(R.layout.activity_main);
+		
 		final RelativeLayout mainLayout = (RelativeLayout) findViewById(R.id.main_layout);
 		
-		signalDisplay = (TextView) findViewById(R.id.textViewSignal);
-		batteryDisplay = (TextView) findViewById(R.id.textViewBattery);
+		this.intervalView = (TextView) findViewById(R.id.textViewInterval);
+		this.intervalView.setText(Integer.toString(this.pollingInterval));
 		
-		signalStrength=new SignalStrengthListener( this );
-		
-		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		final boolean gpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-		
-	    if (!gpsEnabled) {
-	        // Build an alert dialog here that requests that the user enable
-	        // the location services, then when the user clicks the "OK" button,
-	        // call enableLocationSettings()
-	    	Toast toast = Toast.makeText(this, "GPS not enabled", Toast.LENGTH_SHORT);
-	    	toast.show();
-	    } else {
-	    	locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-	    	        10000,          // 10-second interval.
-	    	        10,             // 10 meters.
-	    	        listener);
-	    }
-
 	    statsGraphView = new StatGraph(this);
  
 	    StatsDatabaseHandler db = new StatsDatabaseHandler(this);
@@ -92,7 +73,10 @@ public class MainActivity extends Activity {
 	    {
 	        public void run() 
 	        {
-	        	
+	        
+	        	SharedPreferences settings = getSharedPreferences(PREFS_FILE, 0);
+	        	int pollingInterval=settings.getInt("Interval", 2000);
+	        	Log.d(TAG, "Interval from prefs: "+pollingInterval);
 	            handler.postDelayed(this, pollingInterval);
 	            
 	            Log.d(TAG, "BS "+batteryStrength.getValue());
@@ -108,10 +92,19 @@ public class MainActivity extends Activity {
 	        }
 	    };
 	    
-	    handler.postDelayed(r, this.pollingInterval);
+	    handler.postDelayed(r, this.getPollingInterval());
         
 	}
-
+	
+	public void onResume() {
+		super.onResume();
+		this.settings = getSharedPreferences(PREFS_FILE, 0);
+		int pollingInterval = this.settings.getInt("interval", 10000);
+		Log.d(TAG, "polling Interval: "+pollingInterval);
+		this.intervalView.setText(Integer.toString(pollingInterval));
+		
+	}
+	
 	public void onClickReset(View view) {
         // Initialize database
     	StatsDatabaseHandler db = new StatsDatabaseHandler(this);
@@ -122,6 +115,13 @@ public class MainActivity extends Activity {
 	
 	public void onClickUpdateView(View view) { 	
     	this.updateGraphView();
+	}
+	
+	public int getPollingInterval() {
+		int interval;
+		SharedPreferences settings = getSharedPreferences(PREFS_FILE, 0);
+		interval=settings.getInt("interval", 60000);
+		return interval;
 	}
 	
 	public void updateGraphView() {
@@ -137,13 +137,9 @@ public class MainActivity extends Activity {
 	    statsGraphView.setRecords(records);
     	mainLayout.addView(statsGraphView);
 	}
-	
-	public void updateBatteryValues ( String value ) {
-		this.batteryValues.addValue(value);
-	}
-	
-	public void onClickIntervalSetting(MenuItem item) {
-		Intent intent = new Intent(this, IntervalSettingActivity.class);
+		
+	public void onClickSettingsMenu(MenuItem item) {
+		Intent intent = new Intent(this, SettingsActivity.class);
 	    startActivity(intent);
 	}
 	
@@ -153,32 +149,7 @@ public class MainActivity extends Activity {
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
-	
-	private final LocationListener listener = new LocationListener( ) {
 		
-		public void onLocationChanged(final Location location) { 
-			locationDisplay = (TextView) findViewById(R.id.textViewLocation);
-			
-			// TODO this is where you'd do something like context.sendBroadcast()
-			Log.d(TAG, "Latitude: "+location.getLatitude()
-					  +" Longitude: "+location.getLongitude()
-					  +" Speed: "+location.getSpeed());
-			latitude = location.getLatitude();
-			longitude = location.getLongitude();
-			String locDump=location.toString().replaceAll(",", "\n");
-			locationDisplay.setText( "Lat: "+latitude+"\nLong: "+longitude+"\n"+locDump);
-		}
-		
-		public void onProviderEnabled( String string ) {
-		}
-		
-		public void onProviderDisabled( String string ) {
-		}
-		
-		public void onStatusChanged( String string, int flag, Bundle bundle ) {
-		}
-	};
-	
     public static Context getAppContext() {
         return MainActivity.context;
     }
