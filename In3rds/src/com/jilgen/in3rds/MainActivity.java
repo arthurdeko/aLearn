@@ -24,6 +24,8 @@ import com.jilgen.in3rds.StatGraph;
 import com.jilgen.in3rds.StatsDatabaseHandler;
 import com.jilgen.in3rds.BatteryStrength;
 import com.jilgen.in3rds.InternalStats;
+import com.jilgen.in3rds.IntervalSettingActivity;
+import android.view.MenuItem;
 import java.util.List;
 
 public class MainActivity extends Activity {
@@ -44,13 +46,12 @@ public class MainActivity extends Activity {
 	Double longitude, latitude;
 	public BatteryValues batteryValues = new BatteryValues();
 	private StatGraph statsGraphView;
+	public int pollingInterval = 10000;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-    	Log.d(TAG, "sasad");
-    	
+
         MainActivity.context = getApplicationContext();
          
 		setContentView(R.layout.activity_main);
@@ -92,7 +93,7 @@ public class MainActivity extends Activity {
 	        public void run() 
 	        {
 	        	
-	            handler.postDelayed(this, 10000);
+	            handler.postDelayed(this, pollingInterval);
 	            
 	            Log.d(TAG, "BS "+batteryStrength.getValue());
 	            
@@ -107,7 +108,7 @@ public class MainActivity extends Activity {
 	        }
 	    };
 	    
-	    handler.postDelayed(r, 10000);
+	    handler.postDelayed(r, this.pollingInterval);
         
 	}
 
@@ -115,17 +116,8 @@ public class MainActivity extends Activity {
         // Initialize database
     	StatsDatabaseHandler db = new StatsDatabaseHandler(this);
     	db.initialize();
-    	
-		final RelativeLayout mainLayout = (RelativeLayout) findViewById(R.id.main_layout);
-    	mainLayout.removeView(statsGraphView);
-	    statsGraphView = new StatGraph(this);
-	    
-	    List<InternalStats> records = db.getAllBatteryStrengths();
 	    db.close();
-	    Log.d(TAG, "Records count in Main "+records.size());
-	    statsGraphView.setRecords(records);
-    	mainLayout.addView(statsGraphView);
-    	
+	    updateGraphView();
 	}
 	
 	public void onClickUpdateView(View view) { 	
@@ -148,6 +140,11 @@ public class MainActivity extends Activity {
 	
 	public void updateBatteryValues ( String value ) {
 		this.batteryValues.addValue(value);
+	}
+	
+	public void onClickIntervalSetting(MenuItem item) {
+		Intent intent = new Intent(this, IntervalSettingActivity.class);
+	    startActivity(intent);
 	}
 	
 	@Override

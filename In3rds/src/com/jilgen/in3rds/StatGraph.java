@@ -35,12 +35,10 @@ public class StatGraph extends View {
 	}
 	
 	protected void onDraw(Canvas canvas) {
-		Log.d(TAG, "Drawing");
-		
+
 		int counter = 0;
 		int x = 20;
-		int barWidth = 10;
-		Log.d(TAG, "Drawing");
+		int barWidth = 1;
 		
 		int recordCount = this.getRecords().size();
 		Log.d(TAG, "Drawing "+recordCount);
@@ -48,19 +46,13 @@ public class StatGraph extends View {
 			this.bar.getPaint().setColor(0xff74AC23);
 
 			int width = statsRecord.getBatteryStrength() * 10;
-			int height = barWidth;
 			int y = counter * barWidth;
 			y += 2;
 			
 			this.bar.setBounds(x, y, x + width, y + barWidth);
 			this.bar.draw(canvas);
-			Log.d(TAG, "Drawing "+height+":"+width);
-			Log.d(TAG, "Counter "+counter);
 			counter++;			
 		}
-		
-		//graphBar.setBounds(20, 50, 50, 55);
-		//graphBar.draw(canvas);
 
 	}
 
