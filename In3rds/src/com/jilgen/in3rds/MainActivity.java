@@ -3,6 +3,7 @@ package com.jilgen.in3rds;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
@@ -10,26 +11,19 @@ import android.widget.TextView;
 import com.jilgen.in3rds.InternalStatistics;
 import com.jilgen.in3rds.SignalStrengthListener;
 import com.jilgen.in3rds.SimpleIntentService;
-import android.widget.Button;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.util.Log;
 import android.os.Handler;
-import android.os.Message;
-import android.os.Messenger;
 import com.jilgen.in3rds.BatteryValues;
 import android.widget.RelativeLayout;
-import android.widget.LinearLayout;
-import java.lang.Thread;
-import android.widget.ImageView;
-import android.graphics.drawable.*;
 import com.jilgen.in3rds.StatGraph;
-import com.jilgen.in3rds.GraphBar;
+import com.jilgen.in3rds.StatsDatabaseHandler;
+import com.jilgen.in3rds.BatteryStrength;
+import com.jilgen.in3rds.InternalStats;
 import java.util.List;
 
 public class MainActivity extends Activity {
@@ -98,7 +92,7 @@ public class MainActivity extends Activity {
 	        public void run() 
 	        {
 	        	
-	            handler.postDelayed(this, 300000);
+	            handler.postDelayed(this, 10000);
 	            
 	            Log.d(TAG, "BS "+batteryStrength.getValue());
 	            
@@ -108,10 +102,12 @@ public class MainActivity extends Activity {
 	            Log.d(TAG, Integer.toString(stats.size()));
 	            
 	            db.close();
+	            
+	            updateGraphView();
 	        }
 	    };
 	    
-	    handler.postDelayed(r, 300000);
+	    handler.postDelayed(r, 10000);
         
 	}
 
@@ -119,16 +115,35 @@ public class MainActivity extends Activity {
         // Initialize database
     	StatsDatabaseHandler db = new StatsDatabaseHandler(this);
     	db.initialize();
-    	/*
+    	
 		final RelativeLayout mainLayout = (RelativeLayout) findViewById(R.id.main_layout);
     	mainLayout.removeView(statsGraphView);
 	    statsGraphView = new StatGraph(this);
 	    
 	    List<InternalStats> records = db.getAllBatteryStrengths();
+	    db.close();
 	    Log.d(TAG, "Records count in Main "+records.size());
 	    statsGraphView.setRecords(records);
     	mainLayout.addView(statsGraphView);
-    	*/
+    	
+	}
+	
+	public void onClickUpdateView(View view) { 	
+    	this.updateGraphView();
+	}
+	
+	public void updateGraphView() {
+		final RelativeLayout mainLayout = (RelativeLayout) findViewById(R.id.main_layout);
+	    mainLayout.removeView(statsGraphView);
+	    
+       	StatsDatabaseHandler db = new StatsDatabaseHandler(this);
+	    List<InternalStats> records = db.getAllBatteryStrengths();
+	    db.close();
+	    
+	    Log.d(TAG, "Records count in Main "+records.size());
+	    statsGraphView = new StatGraph(this);
+	    statsGraphView.setRecords(records);
+    	mainLayout.addView(statsGraphView);
 	}
 	
 	public void updateBatteryValues ( String value ) {
