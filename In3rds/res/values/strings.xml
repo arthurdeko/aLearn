@@ -8,5 +8,6 @@
     <string name="battery_switch">Battery Strength</string>
     <string name="signal_switch">Signal</string>
     <string name="location_switch">Location</string>
+    <string name="update_battery_strength">UpdateBatteryStrength</string>
 
 </resources>

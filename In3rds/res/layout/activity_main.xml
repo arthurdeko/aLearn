@@ -1,17 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
-
-        <Button
-            android:id="@+id/button1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/textViewBattery"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="22dp"
-            android:text="@string/poll_button" 
-            android:onClick="onClick"/>
-
+    android:layout_height="fill_parent"
+    android:id="@+id/main_layout" >
+    
         <TextView
             android:id="@+id/textViewBattery"
             android:layout_width="fill_parent"
@@ -37,15 +28,6 @@
             android:layout_alignParentRight="true"
             android:layout_below="@+id/textViewSignal" />
 
-        <ToggleButton
-            android:id="@+id/toggleButton1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignTop="@+id/button1"
-            android:layout_marginRight="14dp"
-            android:onClick="onToggleClicked" />
-
         <TextView
             android:id="@+id/batteryHistoryView"
             android:layout_width="wrap_content"
@@ -54,5 +36,17 @@
             android:layout_below="@+id/textViewLocation"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="18dp" />
+
+        <Button
+            android:id="@+id/button1"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/textViewSignal"
+            android:layout_alignBottom="@+id/textViewSignal"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:text="reset"
+            android:onClick="onClickReset" />
     
 </RelativeLayout>

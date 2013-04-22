@@ -18,7 +18,6 @@ public class SignalStrengthListener extends PhoneStateListener {
 	}
 	
 	public void onSignalStrengthsChanged(SignalStrength signalStrength) { 
-		Log.d(TAG, "Signal Strength "+signalStrength.getGsmSignalStrength() );
 		value=Integer.toString( signalStrength.getGsmSignalStrength() );
 	}
 }

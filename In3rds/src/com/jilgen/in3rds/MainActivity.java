@@ -29,6 +29,7 @@ import java.lang.Thread;
 import android.widget.ImageView;
 import android.graphics.drawable.*;
 import com.jilgen.in3rds.StatGraph;
+import com.jilgen.in3rds.GraphBar;
 import java.util.List;
 
 public class MainActivity extends Activity {
@@ -48,6 +49,7 @@ public class MainActivity extends Activity {
 	LocationManager locationManager;
 	Double longitude, latitude;
 	public BatteryValues batteryValues = new BatteryValues();
+	private StatGraph statsGraphView;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -56,11 +58,7 @@ public class MainActivity extends Activity {
     	Log.d(TAG, "sasad");
     	
         MainActivity.context = getApplicationContext();
- 
-        // Initialize database
-    	//StatsDatabaseHandler db = new StatsDatabaseHandler(context);
-    	//db.initialize();
-        
+         
 		setContentView(R.layout.activity_main);
 		final RelativeLayout mainLayout = (RelativeLayout) findViewById(R.id.main_layout);
 		
@@ -85,16 +83,14 @@ public class MainActivity extends Activity {
 	    	        listener);
 	    }
 
-        
-	    StatGraph statsGraphView = new StatGraph(this);
+	    statsGraphView = new StatGraph(this);
  
 	    StatsDatabaseHandler db = new StatsDatabaseHandler(this);
 	    List<InternalStats> records = db.getAllBatteryStrengths();
 	    Log.d(TAG, "Records count in Main "+records.size());
 	    statsGraphView.setRecords(records);
 	    mainLayout.addView(statsGraphView);
-
-	    	    
+	        
 	    final BatteryStrength batteryStrength = new BatteryStrength(this);
 	    final Handler handler = new Handler();
 	    final Runnable r = new Runnable()
@@ -102,8 +98,8 @@ public class MainActivity extends Activity {
 	        public void run() 
 	        {
 	        	
-	            handler.postDelayed(this, 2000);
-	            /*
+	            handler.postDelayed(this, 300000);
+	            
 	            Log.d(TAG, "BS "+batteryStrength.getValue());
 	            
 	        	StatsDatabaseHandler db = new StatsDatabaseHandler(context);
@@ -112,18 +108,29 @@ public class MainActivity extends Activity {
 	            Log.d(TAG, Integer.toString(stats.size()));
 	            
 	            db.close();
-	            */        
-
 	        }
 	    };
 	    
-	    handler.postDelayed(r, 2000);
-	    
-	    //Intent batteryStrengthIntent = new Intent(this, SimpleIntentService.class );
-	    //this.startService(batteryStrengthIntent);
+	    handler.postDelayed(r, 300000);
         
 	}
 
+	public void onClickReset(View view) {
+        // Initialize database
+    	StatsDatabaseHandler db = new StatsDatabaseHandler(this);
+    	db.initialize();
+    	/*
+		final RelativeLayout mainLayout = (RelativeLayout) findViewById(R.id.main_layout);
+    	mainLayout.removeView(statsGraphView);
+	    statsGraphView = new StatGraph(this);
+	    
+	    List<InternalStats> records = db.getAllBatteryStrengths();
+	    Log.d(TAG, "Records count in Main "+records.size());
+	    statsGraphView.setRecords(records);
+    	mainLayout.addView(statsGraphView);
+    	*/
+	}
+	
 	public void updateBatteryValues ( String value ) {
 		this.batteryValues.addValue(value);
 	}
