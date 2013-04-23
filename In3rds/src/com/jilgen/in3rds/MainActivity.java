@@ -18,6 +18,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.os.Handler;
+import android.text.format.Time;
+import com.jilgen.in3rds.R;
 import com.jilgen.in3rds.BatteryValues;
 import android.widget.RelativeLayout;
 import com.jilgen.in3rds.StatGraph;
@@ -75,20 +77,26 @@ public class MainActivity extends Activity {
 	        {
 	        
 	        	SharedPreferences settings = getSharedPreferences(PREFS_FILE, 0);
-	        	int pollingInterval=settings.getInt("Interval", 2000);
+	        	int pollingInterval=settings.getInt("interval", 2000);
+	        	
 	        	Log.d(TAG, "Interval from prefs: "+pollingInterval);
-	            handler.postDelayed(this, pollingInterval);
-	            
 	            Log.d(TAG, "BS "+batteryStrength.getValue());
 	            
 	        	StatsDatabaseHandler db = new StatsDatabaseHandler(context);
-	            db.addStat(new InternalStats(batteryStrength.getValue()));	        	
+	            Time time = new Time();
+	            time.setToNow();
+	            db.addStat(new InternalStats(batteryStrength.getValue(), time.hour+":"+time.minute+":"+time.second));	        	
+
+	            Log.d(TAG, time.hour+":"+time.minute+":"+time.second);
+	            
 	            List<InternalStats> stats = db.getAllBatteryStrengths();
 	            Log.d(TAG, Integer.toString(stats.size()));
 	            
 	            db.close();
 	            
 	            updateGraphView();
+	        	handler.postDelayed(this, pollingInterval);
+	        	
 	        }
 	    };
 	    
