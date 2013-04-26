@@ -69,39 +69,6 @@ public class MainActivity extends Activity {
 	    Log.d(TAG, "Records count in Main "+records.size());
 	    statsGraphView.setRecords(records);
 	    mainLayout.addView(statsGraphView);
-	        
-	    final BatteryStrength batteryStrength = new BatteryStrength(this);
-	    final Handler handler = new Handler();
-	    final Runnable r = new Runnable()
-	    {
-	        public void run() 
-	        {
-	        
-	        	SharedPreferences settings = getSharedPreferences(PREFS_FILE, 0);
-	        	int pollingInterval=settings.getInt("interval", 2000);
-	        	
-	        	Log.d(TAG, "Interval from prefs: "+pollingInterval);
-	            Log.d(TAG, "BS "+batteryStrength.getValue());
-	            
-	        	StatsDatabaseHandler db = new StatsDatabaseHandler(context);
-	            Time time = new Time();
-	            time.setToNow();
-	            db.addStat(new InternalStats(batteryStrength.getValue(), time.hour+":"+time.minute+":"+time.second));	        	
-
-	            Log.d(TAG, time.hour+":"+time.minute+":"+time.second);
-	            
-	            List<InternalStats> stats = db.getAllBatteryStrengths();
-	            Log.d(TAG, Integer.toString(stats.size()));
-	            
-	            db.close();
-	            
-	            updateGraphView();
-	        	handler.postDelayed(this, pollingInterval);
-	        	
-	        }
-	    };
-	    
-	    handler.postDelayed(r, this.getPollingInterval());
         
 	}
 	
@@ -112,6 +79,11 @@ public class MainActivity extends Activity {
 		Log.d(TAG, "polling Interval: "+pollingInterval);
 		this.intervalView.setText(Integer.toString(pollingInterval));
 		
+	}
+
+	public int getBarScaleSetting() {
+		int barScale = this.settings.getInt("barScale", 1);
+		return barScale;
 	}
 	
 	public void onClickReset(MenuItem item) {
@@ -142,7 +114,7 @@ public class MainActivity extends Activity {
 	public void updateGraphView() {
 		final RelativeLayout mainLayout = (RelativeLayout) findViewById(R.id.main_layout);
 	    mainLayout.removeView(statsGraphView);
-	    
+	    mainLayout.getChildAt(1);
        	StatsDatabaseHandler db = new StatsDatabaseHandler(this);
 	    List<InternalStats> records = db.getAllBatteryStrengths();
 	    db.close();
@@ -150,6 +122,7 @@ public class MainActivity extends Activity {
 	    Log.d(TAG, "Records count in Main "+records.size());
 	    statsGraphView = new StatGraph(this);
 	    statsGraphView.setRecords(records);
+	    statsGraphView.setBarScale(this.getBarScaleSetting());
     	mainLayout.addView(statsGraphView);
 	}
 		

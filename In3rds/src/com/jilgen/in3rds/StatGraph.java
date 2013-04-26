@@ -17,6 +17,7 @@ public class StatGraph extends View {
 	private ShapeDrawable bar = new ShapeDrawable(new RectShape());
 	private List<InternalStats> _records;
 	private ShapeDrawable graphBar;
+	private int barScale = 1; 
 	
 	public StatGraph(Context context) {
 		super(context);
@@ -24,6 +25,14 @@ public class StatGraph extends View {
 		graphBar = new ShapeDrawable(new RectShape());
 		graphBar.getPaint().setColor(0xff74AC23);
 
+	}
+	
+	public void setBarScale( int scale ) {
+		this.barScale=scale;
+	}
+	
+	public int getBarScale() {
+		return this.barScale;
 	}
 	
 	public List<InternalStats> getRecords() {
@@ -45,7 +54,7 @@ public class StatGraph extends View {
 		for ( InternalStats statsRecord : this.getRecords() ) {
 			this.bar.getPaint().setColor(0xff74AC23);
 
-			int width = statsRecord.getBatteryStrength() * 10;
+			int width = statsRecord.getBatteryStrength() * this.barScale;
 			int y = counter * barWidth;
 			y += 2;
 			

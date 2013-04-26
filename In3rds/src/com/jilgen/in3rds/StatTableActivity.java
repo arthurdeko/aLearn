@@ -175,6 +175,13 @@ public class StatTableActivity extends ListActivity {
 	    startActivity(intent);
 	}
 	
+	public void onClickReset(MenuItem item) {
+        // Initialize database
+    	StatsDatabaseHandler db = new StatsDatabaseHandler(this);
+    	db.initialize();
+	    db.close();
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
