@@ -47,14 +47,22 @@ public class SettingsActivity extends Activity {
 		return true;
 	}
 
-	public void onClickDone(View view) {
-		Intent intent = new Intent(this, MainActivity.class);
-		 
+	public void onPause() {
+		super.onPause();
+		this._updatePollingInterval();		
+	}
+	
+	private void _updatePollingInterval() {
 		int pollingInterval = Integer.parseInt(intervalEdit.getText().toString());
 		this.settings = getSharedPreferences(PREFS_FILE, 0);
 		this.editor=settings.edit();
 		this.editor.putInt("interval", pollingInterval);
 		this.editor.commit();
+	}
+	
+	public void onClickDone(View view) {
+		Intent intent = new Intent(this, MainActivity.class);		 
+		this._updatePollingInterval();
 		
 		startActivity(intent);
 	}

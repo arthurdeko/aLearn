@@ -14,10 +14,10 @@ public class StatsDatabaseHandler extends SQLiteOpenHelper {
 
 	private static final int DATABASE_VERSION = 1;
 	private static final String DATABASE_NAME = "statsManager";
-	private static final String TABLE_STATS = "stats";
-	private static final String KEY_ID = "id";
-	private static final String KEY_DATETIME = "datetime";
-	private static final String KEY_BATTERY_STRENGTH = "batteryStrength";
+	public static final String TABLE_STATS = "stats";
+	private static final String KEY_ID = "_id";
+	public static final String KEY_DATETIME = "datetime";
+	public static final String KEY_BATTERY_STRENGTH = "batteryStrength";
 	
 	
 	public StatsDatabaseHandler(Context context) {
@@ -31,7 +31,6 @@ public class StatsDatabaseHandler extends SQLiteOpenHelper {
 				+ KEY_BATTERY_STRENGTH + " INTEGER,"
 				+ KEY_DATETIME + " TEXT)";
 		db.execSQL(CREATE_STATS_TABLE);
-
 	}
 
 	@Override
@@ -64,7 +63,6 @@ public class StatsDatabaseHandler extends SQLiteOpenHelper {
 		List<InternalStats> batteryStrengthList = new ArrayList<InternalStats>();
 		
 		String selectQuery = "SELECT " + KEY_DATETIME +"," + KEY_BATTERY_STRENGTH + " FROM " + TABLE_STATS;
-		//String selectQuery = "SELECT " + KEY_BATTERY_STRENGTH + " FROM " + TABLE_STATS;
 		
 		SQLiteDatabase db = this.getWritableDatabase();
 		Cursor cursor = db.rawQuery(selectQuery, null);
@@ -79,6 +77,13 @@ public class StatsDatabaseHandler extends SQLiteOpenHelper {
 		}
 		
 		return batteryStrengthList;
+	}
+	
+	public Cursor getAllRecordsForView() {
+		String selectQuery = "SELECT "+ KEY_ID + "," + KEY_DATETIME + "," + KEY_BATTERY_STRENGTH + " FROM " + TABLE_STATS;
+		
+		SQLiteDatabase db = this.getWritableDatabase();
+		return db.rawQuery(selectQuery, null);
 	}
 
 }

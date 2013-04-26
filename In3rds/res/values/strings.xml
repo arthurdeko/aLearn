@@ -3,13 +3,17 @@
 
     <string name="app_name">In3rds</string>
     <string name="action_settings">Settings</string>
+    <string name="action_reset">Reset</string>
     <string name="hello_world">Hello world!</string>
     <string name="poll_button">Poll</string>
     <string name="battery_switch">Battery Strength</string>
     <string name="signal_switch">Signal</string>
     <string name="location_switch">Location</string>
     <string name="update_battery_strength">UpdateBatteryStrength</string>
-    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="title_activity_settings">Setting</string>
     <string name="interval_settings">Polling Interval</string>
+    <string name="title_activity_stat_table">Table View</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 
 </resources>

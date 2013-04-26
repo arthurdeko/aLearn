@@ -27,6 +27,7 @@ import com.jilgen.in3rds.StatsDatabaseHandler;
 import com.jilgen.in3rds.BatteryStrength;
 import com.jilgen.in3rds.InternalStats;
 import com.jilgen.in3rds.SettingsActivity;
+import com.jilgen.in3rds.StatTableActivity;
 import android.content.SharedPreferences;
 import android.view.MenuItem;
 import java.util.List;
@@ -113,7 +114,7 @@ public class MainActivity extends Activity {
 		
 	}
 	
-	public void onClickReset(View view) {
+	public void onClickReset(MenuItem item) {
         // Initialize database
     	StatsDatabaseHandler db = new StatsDatabaseHandler(this);
     	db.initialize();
@@ -123,6 +124,12 @@ public class MainActivity extends Activity {
 	
 	public void onClickUpdateView(View view) { 	
     	this.updateGraphView();
+	}
+	
+	public void onClickTable(View view) {
+		Intent intent = new Intent(this, StatTableActivity.class);
+		Log.d(TAG, intent.toString());
+		startActivity(intent);
 	}
 	
 	public int getPollingInterval() {
