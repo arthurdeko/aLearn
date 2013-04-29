@@ -38,6 +38,7 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_stat_table" >
         </activity>
+        <service android:name="SimpleIntentService"></service>
     </application>
 
 </manifest>

@@ -1,22 +1,20 @@
 package com.jilgen.in3rds;
-import android.text.format.Time;
 
 public class InternalStats {
 	private int _id;
-	private String _datetime;
+	private long _time;
 	private int _batteryStrength;
 	
 	public InternalStats() {
 		
 	}
 	
-	public InternalStats( int _id, Time datetime, int _batteryStrength ) {
-		this._id=_id;
-		this._batteryStrength=_batteryStrength;	
+	public InternalStats(int _batteryStrength) {
+		this._batteryStrength=_batteryStrength;
 	}
 	
-	public InternalStats(int _batteryStrength, String _datetime) {
-		this._datetime=_datetime;
+	public InternalStats(int _batteryStrength, long _time) {
+		this._time=_time;
 		this._batteryStrength=_batteryStrength;
 	}	
 	
@@ -28,12 +26,12 @@ public class InternalStats {
 		this._id = _id;
 	}
 	
-	public String getDateTime() {
-		return this._datetime;
+	public long getTime() {
+		return this._time;
 	}
 	
-	public void setDateTime(String _datetime) {
-		this._datetime=_datetime;
+	public void setTime(long _time) {
+		this._time=_time;
 	}
 	
 	public int getBatteryStrength() {

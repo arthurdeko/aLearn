@@ -17,9 +17,8 @@ public class SimpleIntentService extends IntentService {
 
 	public Context context=MainActivity.getAppContext();
 	static final String TAG = "SimpleIntentService";
-	public BatteryStrength batteryStrength=new BatteryStrength( context );
 	public BatteryValues batteryValues = new BatteryValues();
-	
+   
 	public SimpleIntentService() {
 		super("SimpleIntentService");
 	}
@@ -33,16 +32,8 @@ public class SimpleIntentService extends IntentService {
 	public int onStartCommand(final Intent intent, final int flags, final int startId) {
 
 		Log.i(TAG,"Service Started");
-		Log.d(TAG, intent.toString());
 
-		String batteryString = ""+this.batteryStrength.getValue();
-		this.batteryValues.addValue(batteryString);
-		this.batteryValues.addValue(batteryString);
-		this.batteryValues.addValue(batteryString);
-		this.batteryValues.addValue(batteryString);
-		Log.d(TAG, "Battery Strength "+batteryValues.toString());
-        
-		final BatteryStrength batteryStrength = new BatteryStrength(this);
+		final BatteryStrength batteryStrength = new BatteryStrength(this.context);
 		final Handler handler = new Handler();
 		final Runnable r = new Runnable()
 		{
@@ -50,42 +41,27 @@ public class SimpleIntentService extends IntentService {
 			{
         
 				SharedPreferences settings = getSharedPreferences(MainActivity.PREFS_FILE, 0);
-				int pollingInterval=settings.getInt("interval", 2000);
+				int pollingInterval=settings.getInt("interval", 2) * 1000;
         	
 				Log.d(TAG, "Interval from prefs: "+pollingInterval);
 				Log.d(TAG, "BS "+batteryStrength.getValue());
             
 				StatsDatabaseHandler db = new StatsDatabaseHandler(context);
-				Time time = new Time();
-				time.setToNow();
-				db.addStat(new InternalStats(batteryStrength.getValue(), time.hour+":"+time.minute+":"+time.second));	        	
 
-				Log.d(TAG, time.hour+":"+time.minute+":"+time.second);
-            
-				List<InternalStats> stats = db.getAllBatteryStrengths();
-				Log.d(TAG, Integer.toString(stats.size()));
-            
+				long time = System.currentTimeMillis() / 1000;
+				db.addStat(new InternalStats(batteryStrength.getValue(), time));	        	
+
+				Log.d(TAG, "Seconds :"+time);            
 				db.close();
-            
-				updateGraphView();
-				handler.postDelayed(this, pollingInterval);
-        	
-        }
-    };
-    
-    handler.postDelayed(r, this.getPollingInterval());
-		
-		
-		//while (true) {
-			//batteryHistory.setText(batteryValues.toString());
-			//try {
-				//Thread.sleep(100);
-			//} catch (InterruptedException e) {
 				
-			//}
-		//}
-		
-		
+				handler.postDelayed(this, pollingInterval);
+			}
+		};
+    
+		SharedPreferences settings = getSharedPreferences(MainActivity.PREFS_FILE, 0);
+		int pollingInterval=settings.getInt("interval", 2) * 1000;
+		handler.postDelayed(r, pollingInterval);
+	
 	    return super.onStartCommand(intent, flags, startId);
 
 	}

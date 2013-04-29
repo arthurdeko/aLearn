@@ -63,7 +63,7 @@ public class StatTableActivity extends ListActivity {
 		Cursor cursor=db.getAllRecordsForView();
 
         // THE DESIRED COLUMNS TO BE BOUND
-        String[] columns = new String[] { db.KEY_DATETIME, db.KEY_BATTERY_STRENGTH };
+        String[] columns = new String[] { db.KEY_TIME, db.KEY_BATTERY_STRENGTH };
         // THE XML DEFINED VIEWS WHICH THE DATA WILL BE BOUND TO
         int[] to = new int[] { R.id.datetime_entry, R.id.battery_strength_entry };
 

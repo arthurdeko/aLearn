@@ -30,6 +30,7 @@ import com.jilgen.in3rds.SettingsActivity;
 import com.jilgen.in3rds.StatTableActivity;
 import android.content.SharedPreferences;
 import android.view.MenuItem;
+import android.content.BroadcastReceiver;
 import java.util.List;
 
 public class MainActivity extends Activity {
@@ -39,51 +40,56 @@ public class MainActivity extends Activity {
 	static final String PREFS_FILE = "In3rdsPrefs";
     private static Context context;
 	InternalStatistics internalStatistics;
-	//BatteryStrength batteryStrength;
-	private TextView intervalView;
 	private SharedPreferences settings;
 	boolean isBound;
 	private StatGraph statsGraphView;
-	public int pollingInterval = 10000;
+	private int _pollingInterval = 10;
+	private int _barWidth = 1;
+	final Handler handler = new Handler();
+	int createdCounter = 0;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		this.settings = getSharedPreferences(PREFS_FILE,0);		
-		this.pollingInterval = settings.getInt("interval", 100000);
+		this._pollingInterval = settings.getInt("interval", this._pollingInterval);
+		this._barWidth = settings.getInt("barWidth", this._barWidth);
 		
         MainActivity.context = getApplicationContext();
          
 		setContentView(R.layout.activity_main);
+		createdCounter++;
+		final Runnable r = new Runnable () {
+			public void run() {
+				updateGraphView();
+				handler.postDelayed(this, _pollingInterval * 1000);
+			}
+		};
+		this.handler.postDelayed(r, this._pollingInterval * 1000);
 		
-		final RelativeLayout mainLayout = (RelativeLayout) findViewById(R.id.main_layout);
+		Intent intent = new Intent(this, SimpleIntentService.class);
+		startService(intent);
 		
-		this.intervalView = (TextView) findViewById(R.id.textViewInterval);
-		this.intervalView.setText(Integer.toString(this.pollingInterval));
-		
-	    statsGraphView = new StatGraph(this);
- 
-	    StatsDatabaseHandler db = new StatsDatabaseHandler(this);
-	    List<InternalStats> records = db.getAllBatteryStrengths();
-	    Log.d(TAG, "Records count in Main "+records.size());
-	    statsGraphView.setRecords(records);
-	    mainLayout.addView(statsGraphView);
+		this.updateGraphView();
         
 	}
-	
-	public void onResume() {
-		super.onResume();
-		this.settings = getSharedPreferences(PREFS_FILE, 0);
-		int pollingInterval = this.settings.getInt("interval", 10000);
-		Log.d(TAG, "polling Interval: "+pollingInterval);
-		this.intervalView.setText(Integer.toString(pollingInterval));
-		
-	}
 
+	public void onDestory() {
+		Intent intent = new Intent(this, SimpleIntentService.class );
+		stopService(intent);
+		
+		super.onDestroy();
+	}
+	
 	public int getBarScaleSetting() {
 		int barScale = this.settings.getInt("barScale", 1);
 		return barScale;
+	}
+	
+	public int getBarWidthSetting() {
+		int barWidth = this.settings.getInt("barWidth", 1);
+		return barWidth;
 	}
 	
 	public void onClickReset(MenuItem item) {
@@ -98,6 +104,11 @@ public class MainActivity extends Activity {
     	this.updateGraphView();
 	}
 	
+	public void onResume() {
+		this.updateGraphView();
+		super.onResume();
+	}
+	
 	public void onClickTable(View view) {
 		Intent intent = new Intent(this, StatTableActivity.class);
 		Log.d(TAG, intent.toString());
@@ -107,14 +118,14 @@ public class MainActivity extends Activity {
 	public int getPollingInterval() {
 		int interval;
 		SharedPreferences settings = getSharedPreferences(PREFS_FILE, 0);
-		interval=settings.getInt("interval", 60000);
+		interval=settings.getInt("interval", 6);
 		return interval;
 	}
 	
 	public void updateGraphView() {
 		final RelativeLayout mainLayout = (RelativeLayout) findViewById(R.id.main_layout);
 	    mainLayout.removeView(statsGraphView);
-	    mainLayout.getChildAt(1);
+
        	StatsDatabaseHandler db = new StatsDatabaseHandler(this);
 	    List<InternalStats> records = db.getAllBatteryStrengths();
 	    db.close();
@@ -123,6 +134,7 @@ public class MainActivity extends Activity {
 	    statsGraphView = new StatGraph(this);
 	    statsGraphView.setRecords(records);
 	    statsGraphView.setBarScale(this.getBarScaleSetting());
+	    statsGraphView.setBarWidth(this.getBarWidthSetting());
     	mainLayout.addView(statsGraphView);
 	}
 		

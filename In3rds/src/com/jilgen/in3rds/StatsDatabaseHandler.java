@@ -16,7 +16,7 @@ public class StatsDatabaseHandler extends SQLiteOpenHelper {
 	private static final String DATABASE_NAME = "statsManager";
 	public static final String TABLE_STATS = "stats";
 	private static final String KEY_ID = "_id";
-	public static final String KEY_DATETIME = "datetime";
+	public static final String KEY_TIME = "time";
 	public static final String KEY_BATTERY_STRENGTH = "batteryStrength";
 	
 	
@@ -29,7 +29,7 @@ public class StatsDatabaseHandler extends SQLiteOpenHelper {
 		String CREATE_STATS_TABLE="CREATE TABLE " + TABLE_STATS + "("
 				+ KEY_ID + " INTEGER PRIMARY KEY," 
 				+ KEY_BATTERY_STRENGTH + " INTEGER,"
-				+ KEY_DATETIME + " TEXT)";
+				+ KEY_TIME + " TEXT)";
 		db.execSQL(CREATE_STATS_TABLE);
 	}
 
@@ -42,12 +42,11 @@ public class StatsDatabaseHandler extends SQLiteOpenHelper {
 	public void addStat(InternalStats stats) {
 		SQLiteDatabase db = this.getWritableDatabase();
 		
-		Time datetime = new Time();
-		datetime.setToNow();
+		long time = System.currentTimeMillis();
 		
 		ContentValues values = new ContentValues();
 		values.put(KEY_BATTERY_STRENGTH, stats.getBatteryStrength());
-		values.put(KEY_DATETIME, datetime.format2445());
+		values.put(KEY_TIME, time);
 		
 		db.insert(TABLE_STATS, null, values);
 		db.close();
@@ -62,7 +61,7 @@ public class StatsDatabaseHandler extends SQLiteOpenHelper {
 	public List<InternalStats> getAllBatteryStrengths() {
 		List<InternalStats> batteryStrengthList = new ArrayList<InternalStats>();
 		
-		String selectQuery = "SELECT " + KEY_DATETIME +"," + KEY_BATTERY_STRENGTH + " FROM " + TABLE_STATS;
+		String selectQuery = "SELECT " + KEY_TIME +"," + KEY_BATTERY_STRENGTH + " FROM " + TABLE_STATS;
 		
 		SQLiteDatabase db = this.getWritableDatabase();
 		Cursor cursor = db.rawQuery(selectQuery, null);
@@ -70,7 +69,7 @@ public class StatsDatabaseHandler extends SQLiteOpenHelper {
 		if (cursor.moveToFirst()) {
 			do {
 				InternalStats internalStats = new InternalStats();
-				internalStats.setDateTime(cursor.getString(0));
+				internalStats.setTime(cursor.getLong(0));
 				internalStats.setBatteryStrength(Integer.parseInt(cursor.getString(1)));
 				batteryStrengthList.add(internalStats);
 			} while (cursor.moveToNext());
@@ -80,7 +79,7 @@ public class StatsDatabaseHandler extends SQLiteOpenHelper {
 	}
 	
 	public Cursor getAllRecordsForView() {
-		String selectQuery = "SELECT "+ KEY_ID + "," + KEY_DATETIME + "," + KEY_BATTERY_STRENGTH + " FROM " + TABLE_STATS;
+		String selectQuery = "SELECT "+ KEY_ID + "," + KEY_TIME + "," + KEY_BATTERY_STRENGTH + " FROM " + TABLE_STATS;
 		
 		SQLiteDatabase db = this.getWritableDatabase();
 		return db.rawQuery(selectQuery, null);
