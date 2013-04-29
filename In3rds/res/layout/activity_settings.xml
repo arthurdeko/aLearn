@@ -17,7 +17,7 @@
         android:layout_alignParentTop="true"
         android:ems="8"
         android:inputType="number"
-        android:textSize="12sp" />
+        android:textSize="14sp" />
 
     <TextView
         android:id="@+id/textView2"
@@ -52,7 +52,7 @@
         android:layout_alignLeft="@+id/editIntervalText"
         android:ems="8"
         android:inputType="number"
-        android:textSize="12sp" />
+        android:textSize="14sp" />
 
     <EditText
         android:id="@+id/editBarWidthText"
@@ -62,7 +62,7 @@
         android:layout_alignLeft="@+id/editBarScaleText"
         android:ems="8"
         android:inputType="number"
-        android:textSize="12sp" >
+        android:textSize="14sp" >
 
         <requestFocus />
     </EditText>

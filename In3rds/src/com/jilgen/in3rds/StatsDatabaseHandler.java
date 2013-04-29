@@ -42,11 +42,12 @@ public class StatsDatabaseHandler extends SQLiteOpenHelper {
 	public void addStat(InternalStats stats) {
 		SQLiteDatabase db = this.getWritableDatabase();
 		
-		long time = System.currentTimeMillis();
+		long timeMillis = System.currentTimeMillis() / 1000;
+		double timeSec=Math.floor(timeMillis);
 		
 		ContentValues values = new ContentValues();
 		values.put(KEY_BATTERY_STRENGTH, stats.getBatteryStrength());
-		values.put(KEY_TIME, time);
+		values.put(KEY_TIME, timeSec);
 		
 		db.insert(TABLE_STATS, null, values);
 		db.close();

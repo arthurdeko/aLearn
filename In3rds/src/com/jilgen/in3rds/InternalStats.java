@@ -2,7 +2,7 @@ package com.jilgen.in3rds;
 
 public class InternalStats {
 	private int _id;
-	private long _time;
+	private double _time;
 	private int _batteryStrength;
 	
 	public InternalStats() {
@@ -13,7 +13,7 @@ public class InternalStats {
 		this._batteryStrength=_batteryStrength;
 	}
 	
-	public InternalStats(int _batteryStrength, long _time) {
+	public InternalStats(int _batteryStrength, double _time) {
 		this._time=_time;
 		this._batteryStrength=_batteryStrength;
 	}	
@@ -26,7 +26,7 @@ public class InternalStats {
 		this._id = _id;
 	}
 	
-	public long getTime() {
+	public double getTime() {
 		return this._time;
 	}
 	

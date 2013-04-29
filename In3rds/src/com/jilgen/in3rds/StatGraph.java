@@ -29,10 +29,9 @@ public class StatGraph extends View {
 		Log.d(TAG, "Constructed");
 		graphBar = new ShapeDrawable(new RectShape());
 		graphBar.getPaint().setColor(0xff74AC23);
-
 	}
 
-	private double getSlope( long t1, long t2, int y1, int y2 ) {
+	private float getSlope( double t1, double t2, int y1, int y2 ) {
 		double slope=0;
 		double timeDelta = t1 - t2;
 		double strengthDelta = y1 - y2;
@@ -41,7 +40,7 @@ public class StatGraph extends View {
 		} else {
 			slope=strengthDelta / timeDelta;
 		}
-		return Math.abs(slope);
+		return Math.abs((float)slope);
 	}
 	
 	public void setBarScale( int _scale ) {
@@ -66,13 +65,11 @@ public class StatGraph extends View {
 	
 	protected void onDraw(Canvas canvas) {
 
-		int counter = 0;
-		int x = 20;
-		
 		int recordCount = this.getRecords().size();
 		Log.d(TAG, "Drawing "+recordCount);
+
 		int previousStrength = 100;
-		long previousTime = 0;
+		double previousTime = 0;
 		
 		ShapeDrawable.ShaderFactory sf = new ShapeDrawable.ShaderFactory() {
 		    @Override
@@ -85,41 +82,64 @@ public class StatGraph extends View {
 		    }
 		};
 		
+		int topMargin = 5;
+		int leftMargin = 5;
+		int leftBatteryMargin = 20;
+		int y = topMargin;
+		float batteryStrokeWidth = 5;
+		float slope = 0;
+		float slopeX = 5;
+		double dt = 0;
+
+		Path slopePath = new Path();
+		Paint slopePaint = new Paint();
+		slopePaint.setStyle(Paint.Style.STROKE);
+		slopePath.moveTo(leftMargin, topMargin);
+		slopePaint.setColor(0xffffff58);
+		
+		Path batteryPath = new Path();
+		Paint batteryPaint = new Paint();
+		batteryPaint.setStyle(Paint.Style.STROKE);
+		batteryPath.moveTo(leftMargin, topMargin);
+		batteryPaint.setColor(0xff2299cc);
+		batteryPaint.setAntiAlias(true);
+		batteryPaint.setStrokeCap(Paint.Cap.ROUND);
+
+		batteryPaint.setStrokeWidth(batteryStrokeWidth);
+		
 		for ( InternalStats statsRecord : this.getRecords() ) {
-
+			
 			int currentStrength = statsRecord.getBatteryStrength();
-			long currentTime = statsRecord.getTime();
+			double currentTime = statsRecord.getTime();
+			
+			if ( previousTime == 0 ) {
+				dt = 0;
+			} else {
+				dt = currentTime - previousTime;
+			}
+			y = (int)dt + y;
+			
+			slope = getSlope( previousTime, currentTime, previousStrength, currentStrength);
 
-			double slope = getSlope( previousTime, currentTime, previousStrength, currentStrength + 1);
+			float batteryX = (float)currentStrength + (float)leftBatteryMargin;
+			if ( y == topMargin ) {
+				batteryPath.moveTo( batteryX, (float)y);
+			} else {
+				batteryPath.lineTo( batteryX, (float)y);
+			}
+
+			Log.d(TAG, "Slope " + (int)Math.floor(slope * 1000) + " " + dt);
 			
-			Log.d(TAG, "Slope "+(int)Math.floor(slope * 1000000));
-			
-			this.bar.getPaint().setColor(0x77449958);
-			this.bar.setShaderFactory(sf);
-			int width = currentStrength * this._barScale;
-			int y = counter * this._barWidth;
-			y += 2;
-			
-			this.bar.setBounds(x, y, x + width, y + this._barWidth);
-			//this.bar.draw(canvas);
-			
-			Path slopePath = new Path();
-			Paint slopePaint = new Paint();
-			slopePaint.setStyle(Paint.Style.STROKE);
-			slopePath.moveTo(0,0);
-			slopePath.lineTo(100, 100);
-			slopePath.lineTo(100, 200);
-			
-			slopePaint.setColor(0xffffff58);
-			canvas.drawPath(slopePath, slopePaint);
-			
-			counter++;
+			slopeX = (float)slope + leftMargin;
+			slopePath.lineTo( slopeX, (float)y);
+			Log.d(TAG, "Point " + slopeX + "," + y);
 
 			previousStrength = currentStrength;
 			previousTime = currentTime;
-
 		}
-
+		
+		canvas.drawPath(slopePath, slopePaint);
+		canvas.drawPath(batteryPath, batteryPaint);
 	}
 
 }

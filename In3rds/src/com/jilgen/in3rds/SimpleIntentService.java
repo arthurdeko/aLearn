@@ -12,6 +12,7 @@ import android.util.Log;
 import com.jilgen.in3rds.BatteryStrength;
 import com.jilgen.in3rds.BatteryValues;
 import com.jilgen.in3rds.MainActivity;
+import java.lang.Math;
 
 public class SimpleIntentService extends IntentService {
 
@@ -47,11 +48,9 @@ public class SimpleIntentService extends IntentService {
 				Log.d(TAG, "BS "+batteryStrength.getValue());
             
 				StatsDatabaseHandler db = new StatsDatabaseHandler(context);
-
-				long time = System.currentTimeMillis() / 1000;
-				db.addStat(new InternalStats(batteryStrength.getValue(), time));	        	
-
-				Log.d(TAG, "Seconds :"+time);            
+				
+				db.addStat(new InternalStats(batteryStrength.getValue()));	        	
+            
 				db.close();
 				
 				handler.postDelayed(this, pollingInterval);
