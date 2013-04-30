@@ -20,15 +20,12 @@ public class StatGraph extends View {
 	final static String TAG = "StatGraph";
 	private ShapeDrawable bar = new ShapeDrawable(new RectShape());
 	private List<InternalStats> _records;
-	private ShapeDrawable graphBar;
-	private int _barScale = 1; 
-	private int _barWidth = 1;
+	private float _scale = 1;
+	private float _strokeWidth = 1;
 	
 	public StatGraph(Context context) {
 		super(context);
 		Log.d(TAG, "Constructed");
-		graphBar = new ShapeDrawable(new RectShape());
-		graphBar.getPaint().setColor(0xff74AC23);
 	}
 
 	private float getSlope( double t1, double t2, int y1, int y2 ) {
@@ -43,16 +40,20 @@ public class StatGraph extends View {
 		return Math.abs((float)slope);
 	}
 	
-	public void setBarScale( int _scale ) {
-		this._barScale=_scale;
+	public void setScale( float _scale ) {
+		this._scale=_scale;
 	}
 	
-	public int getBarScale() {
-		return this._barScale;
+	public float getScale() {
+		return this._scale;
 	}
 	
-	public void setBarWidth(int _width) {
-		this._barWidth=_width;
+	public void setStrokeWidth( float _width ) {
+		this._strokeWidth=_width;
+	}
+	
+	public float getStrokeWidth() {
+		return this._strokeWidth;
 	}
 	
 	public List<InternalStats> getRecords() {
@@ -85,8 +86,8 @@ public class StatGraph extends View {
 		int topMargin = 5;
 		int leftMargin = 5;
 		int leftBatteryMargin = 20;
-		int y = topMargin;
-		float batteryStrokeWidth = 5;
+		float y = topMargin;
+		this.setStrokeWidth(4);
 		float slope = 0;
 		float slopeX = 5;
 		double dt = 0;
@@ -105,7 +106,7 @@ public class StatGraph extends View {
 		batteryPaint.setAntiAlias(true);
 		batteryPaint.setStrokeCap(Paint.Cap.ROUND);
 
-		batteryPaint.setStrokeWidth(batteryStrokeWidth);
+		batteryPaint.setStrokeWidth(this.getStrokeWidth());
 		
 		for ( InternalStats statsRecord : this.getRecords() ) {
 			
@@ -116,23 +117,20 @@ public class StatGraph extends View {
 				dt = 0;
 			} else {
 				dt = currentTime - previousTime;
+				y = (int)dt + y * this._scale;
 			}
-			y = (int)dt + y;
 			
 			slope = getSlope( previousTime, currentTime, previousStrength, currentStrength);
 
 			float batteryX = (float)currentStrength + (float)leftBatteryMargin;
 			if ( y == topMargin ) {
-				batteryPath.moveTo( batteryX, (float)y);
+				batteryPath.moveTo( batteryX, y);
 			} else {
-				batteryPath.lineTo( batteryX, (float)y);
+				batteryPath.lineTo( batteryX, y);
 			}
-
-			Log.d(TAG, "Slope " + (int)Math.floor(slope * 1000) + " " + dt);
 			
 			slopeX = (float)slope + leftMargin;
 			slopePath.lineTo( slopeX, (float)y);
-			Log.d(TAG, "Point " + slopeX + "," + y);
 
 			previousStrength = currentStrength;
 			previousTime = currentTime;

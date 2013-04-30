@@ -44,7 +44,7 @@ public class MainActivity extends Activity {
 	boolean isBound;
 	private StatGraph statsGraphView;
 	private int _pollingInterval = 10;
-	private int _barWidth = 1;
+	private float _scale = 1;
 	final Handler handler = new Handler();
 	int createdCounter = 0;
 	
@@ -54,7 +54,6 @@ public class MainActivity extends Activity {
 
 		this.settings = getSharedPreferences(PREFS_FILE,0);		
 		this._pollingInterval = settings.getInt("interval", this._pollingInterval);
-		this._barWidth = settings.getInt("barWidth", this._barWidth);
 		
         MainActivity.context = getApplicationContext();
          
@@ -82,14 +81,9 @@ public class MainActivity extends Activity {
 		super.onDestroy();
 	}
 	
-	public int getBarScaleSetting() {
-		int barScale = this.settings.getInt("barScale", 1);
-		return barScale;
-	}
-	
-	public int getBarWidthSetting() {
-		int barWidth = this.settings.getInt("barWidth", 1);
-		return barWidth;
+	public float getScaleSetting() {
+		float scale = this.settings.getFloat("scale", 1);
+		return scale;
 	}
 	
 	public void onClickReset(MenuItem item) {
@@ -133,8 +127,7 @@ public class MainActivity extends Activity {
 	    Log.d(TAG, "Records count in Main "+records.size());
 	    statsGraphView = new StatGraph(this);
 	    statsGraphView.setRecords(records);
-	    statsGraphView.setBarScale(this.getBarScaleSetting());
-	    statsGraphView.setBarWidth(this.getBarWidthSetting());
+	    statsGraphView.setScale(this.getScaleSetting());
     	mainLayout.addView(statsGraphView);
 	}
 		

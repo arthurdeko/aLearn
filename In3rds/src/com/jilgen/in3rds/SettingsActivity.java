@@ -17,8 +17,7 @@ public class SettingsActivity extends Activity {
 	private SharedPreferences settings;
 	private SharedPreferences.Editor editor;
 	private EditText intervalEdit;
-	private EditText barScaleEdit;
-	private EditText barWidthEdit;
+	private EditText scaleEdit;
 	final static String TAG = "Settings";
 	static final String PREFS_FILE = "In3rdsPrefs";
 	
@@ -29,18 +28,15 @@ public class SettingsActivity extends Activity {
 		
 		this.settings = getSharedPreferences(PREFS_FILE,0);
 		int pollingInterval = this.settings.getInt("interval", 10);
-		int barScale = this.settings.getInt("barScale", 1);
-		int barWidth = this.settings.getInt("barWidth", 1);
+		float scale = this.settings.getFloat("scale", 0x1);
 		
 		this.intervalEdit = (EditText) findViewById(R.id.editIntervalText);
-		this.barScaleEdit = (EditText) findViewById(R.id.editBarScaleText);
-		this.barWidthEdit = (EditText) findViewById(R.id.editBarWidthText);
+		this.scaleEdit = (EditText) findViewById(R.id.editScaleText);
 		
 		Log.d(TAG, "Polling Interval: "+pollingInterval);
 		Log.d(TAG, this.intervalEdit.toString());
 		this.intervalEdit.setText(Integer.toString(pollingInterval));
-		this.barScaleEdit.setText(Integer.toString(barScale));
-		this.barWidthEdit.setText(Integer.toString(barWidth));
+		this.scaleEdit.setText(Float.toString(scale));
 		
 	}
 
@@ -70,18 +66,14 @@ public class SettingsActivity extends Activity {
 	
 	private void _updateSettings() {
 		int pollingInterval = Integer.parseInt(intervalEdit.getText().toString());
-		int barScale = Integer.parseInt(barScaleEdit.getText().toString());
-		int barWidth = Integer.parseInt(barWidthEdit.getText().toString());
+		float scale = Float.parseFloat(scaleEdit.getText().toString());
 		
 		this.settings = getSharedPreferences(PREFS_FILE, 0);
 		this.editor=settings.edit();
 		
 		this.editor.putInt("interval", pollingInterval);
-		this.editor.putInt("barScale", barScale);
-		this.editor.putInt("barWidth", barWidth);
+		this.editor.putFloat("scale", scale);
 		this.editor.commit();
 	}
-	
-	
 	
 }
