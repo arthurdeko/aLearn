@@ -11,6 +11,7 @@ import android.graphics.Path;
 import android.graphics.Paint;
 import com.jilgen.in3rds.InternalStats;
 import java.util.List;
+import java.util.Random;
 
 public class StatGraph extends View {
 
@@ -19,7 +20,7 @@ public class StatGraph extends View {
 	private float _scale = 1;
 	private float _strokeWidth = 1;
 	public String graphType = "battery";
-	public float start = 20;
+	private float _start = 20;
 	
 	public StatGraph(Context context) {
 		super(context);
@@ -36,6 +37,14 @@ public class StatGraph extends View {
 			slope=strengthDelta / timeDelta;
 		}
 		return Math.abs((float)slope);
+	}
+	
+	public void setStart( float _start ) {
+		this._start = _start;
+	}
+
+	public float getStart( ) {
+		return this._start;
 	}
 	
 	public void setScale( float _scale ) {
@@ -67,9 +76,6 @@ public class StatGraph extends View {
 		int recordCount = this.getRecords().size();
 		Log.d(TAG, "Drawing "+recordCount);
 
-		int previousValue = 100;
-		double previousTime = 0;
-		
 		ShapeDrawable.ShaderFactory sf = new ShapeDrawable.ShaderFactory() {
 		    @Override
 		    public Shader resize(int width, int height) {
@@ -81,18 +87,18 @@ public class StatGraph extends View {
 		    }
 		};
 		
+		double previousTime = 0;
 		int leftMargin = 5;
 		float x = leftMargin;
-		float y = start;
 		this.setStrokeWidth(4);
 		double dt = 0;
 		double currentTime = 0;
-		int currentValue = 0;
+		int value = 0;
 		
 		Path graphPath = new Path();
 		Paint graphPaint = new Paint();
 		graphPaint.setStyle(Paint.Style.STROKE);
-		graphPath.moveTo(leftMargin, start);
+		graphPath.moveTo(leftMargin, this._start);
 		graphPaint.setColor(0xff2299cc);
 		graphPaint.setAntiAlias(true);
 		graphPaint.setStrokeCap(Paint.Cap.ROUND);
@@ -100,11 +106,12 @@ public class StatGraph extends View {
 		graphPaint.setStrokeWidth(this.getStrokeWidth());
 		
 		for ( InternalStats statsRecord : this.getRecords() ) {
+			float y = 0;
 			
 			if ( this.graphType == "battery" ) {
-				currentValue = statsRecord.getBatteryStrength();
+				value = statsRecord.getBatteryStrength();
 			} else if ( this.graphType == "signal") {
-				currentValue = statsRecord.getSignalStrength();
+				value = statsRecord.getSignalStrength();
 			}
 			currentTime = statsRecord.getTime();
 			
@@ -112,27 +119,17 @@ public class StatGraph extends View {
 				dt = 0;
 			} else {
 				dt = currentTime - previousTime;
-				x = (int)dt + x * this._scale;
 			}
+			x = (int)dt + x;
 			
-			y = (float)currentValue + start;
+			y = this._start - (float)value;
+			//Random random = new Random();
+			//y = this._start - (float)random.nextInt(100);
 			
-			if ( x == leftMargin ) {
-				graphPath.moveTo( x, y );
-			} else {
-				graphPath.lineTo( x, y );
-			}
-			/*
-			slope = getSlope( previousTime, currentTime, previousStrength, currentStrength);
+			graphPath.lineTo( x, y );
 			
-			slopeY = (float)slope + leftMargin;
-			slopePath.lineTo( (float)x, slopeY );
-			*/
-			previousValue = currentValue;
 			previousTime = currentTime;
-		}
-		
+		}		
 		canvas.drawPath(graphPath, graphPaint);
 	}
-
 }

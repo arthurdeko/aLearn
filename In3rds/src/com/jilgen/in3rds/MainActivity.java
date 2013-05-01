@@ -46,8 +46,11 @@ public class MainActivity extends Activity {
 		
         MainActivity.context = getApplicationContext();
          
+		Intent intent = new Intent(this, SimpleIntentService.class);
+		startService(intent);
+        
 		setContentView(R.layout.activity_main);
-		createdCounter++;
+
 		final Runnable r = new Runnable () {
 			public void run() {
 				updateGraphView();
@@ -55,9 +58,6 @@ public class MainActivity extends Activity {
 			}
 		};
 		this.handler.postDelayed(r, this._pollingInterval * 1000);
-		
-		Intent intent = new Intent(this, SimpleIntentService.class);
-		startService(intent);
 		
 		this.updateGraphView();
         
@@ -113,20 +113,20 @@ public class MainActivity extends Activity {
        	StatsDatabaseHandler db = new StatsDatabaseHandler(this);
 	    List<InternalStats> batteryRecords = db.getAllBatteryStrengths();
 	    
-	    Log.d(TAG, "Records count in Main "+batteryRecords.size());
 	    batteryGraphView = new StatGraph(this);
 	    batteryGraphView.setRecords(batteryRecords);
 	    batteryGraphView.setScale(this.getScaleSetting());
-	    batteryGraphView.start=30;
+	    batteryGraphView.setStart(120);
+	    batteryGraphView.graphType="battery";
+	    batteryGraphView.setScaleX(this._scale);
     	mainLayout.addView(batteryGraphView);
     	
 	    List<InternalStats> signalRecords = db.getAllSignalStrengths();
 	    
-	    Log.d(TAG, "Records count in Main "+signalRecords.size());
 	    signalGraphView = new StatGraph(this);
-	    signalGraphView.setRecords(batteryRecords);
+	    signalGraphView.setRecords(signalRecords);
 	    signalGraphView.setScale(this.getScaleSetting());
-	    signalGraphView.start=120;
+	    signalGraphView.setStart(240);
 	    signalGraphView.graphType="signal";
     	mainLayout.addView(signalGraphView);
     	
