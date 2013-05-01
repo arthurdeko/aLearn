@@ -4,7 +4,8 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="numeric_setting">50dp</dimen>
-    <dimen name="setting_pad">10dp</dimen>
-    <color name="main_background_color">#ff003355</color>
+    <dimen name="time_width">100dp</dimen>
+    <dimen name="battery_strength_width">50dp</dimen>
+    <dimen name="signal_strength_width">60dp</dimen>
 
 </resources>

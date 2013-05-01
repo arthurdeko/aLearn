@@ -63,9 +63,9 @@ public class StatTableActivity extends ListActivity {
 		Cursor cursor=db.getAllRecordsForView();
 
         // THE DESIRED COLUMNS TO BE BOUND
-        String[] columns = new String[] { db.KEY_TIME, db.KEY_BATTERY_STRENGTH };
+        String[] columns = new String[] { db.KEY_TIME, db.KEY_BATTERY_STRENGTH, db.KEY_SIGNAL_STRENGTH };
         // THE XML DEFINED VIEWS WHICH THE DATA WILL BE BOUND TO
-        int[] to = new int[] { R.id.datetime_entry, R.id.battery_strength_entry };
+        int[] to = new int[] { R.id.datetime_entry, R.id.battery_strength_entry, R.id.signal_strength_entry };
 
         // CREATE THE ADAPTER USING THE CURSOR POINTING TO THE DESIRED DATA AS WELL AS THE LAYOUT INFORMATION
         SimpleCursorAdapter mAdapter = new SimpleCursorAdapter(this, R.layout.stats_entry, cursor, columns, to, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);

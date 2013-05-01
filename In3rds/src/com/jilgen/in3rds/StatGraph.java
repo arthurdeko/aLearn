@@ -1,27 +1,25 @@
 package com.jilgen.in3rds;
 
 import android.content.Context;
-import android.graphics.drawable.ShapeDrawable;
-import android.graphics.drawable.shapes.RectShape;
-import android.util.AttributeSet;
 import android.view.View;
 import android.graphics.Canvas;
 import android.graphics.Shader;
+import android.graphics.drawable.ShapeDrawable;
 import android.graphics.LinearGradient;
 import android.util.Log;
 import android.graphics.Path;
 import android.graphics.Paint;
 import com.jilgen.in3rds.InternalStats;
 import java.util.List;
-import java.util.ArrayList;
 
 public class StatGraph extends View {
 
 	final static String TAG = "StatGraph";
-	private ShapeDrawable bar = new ShapeDrawable(new RectShape());
 	private List<InternalStats> _records;
 	private float _scale = 1;
 	private float _strokeWidth = 1;
+	public String graphType = "battery";
+	public float start = 20;
 	
 	public StatGraph(Context context) {
 		super(context);
@@ -69,7 +67,7 @@ public class StatGraph extends View {
 		int recordCount = this.getRecords().size();
 		Log.d(TAG, "Drawing "+recordCount);
 
-		int previousStrength = 100;
+		int previousValue = 100;
 		double previousTime = 0;
 		
 		ShapeDrawable.ShaderFactory sf = new ShapeDrawable.ShaderFactory() {
@@ -83,61 +81,58 @@ public class StatGraph extends View {
 		    }
 		};
 		
-		int topMargin = 5;
 		int leftMargin = 5;
-		int leftBatteryMargin = 20;
-		float y = topMargin;
+		float x = leftMargin;
+		float y = start;
 		this.setStrokeWidth(4);
-		float slope = 0;
-		float slopeX = 5;
 		double dt = 0;
-
-		Path slopePath = new Path();
-		Paint slopePaint = new Paint();
-		slopePaint.setStyle(Paint.Style.STROKE);
-		slopePath.moveTo(leftMargin, topMargin);
-		slopePaint.setColor(0xffffff58);
+		double currentTime = 0;
+		int currentValue = 0;
 		
-		Path batteryPath = new Path();
-		Paint batteryPaint = new Paint();
-		batteryPaint.setStyle(Paint.Style.STROKE);
-		batteryPath.moveTo(leftMargin, topMargin);
-		batteryPaint.setColor(0xff2299cc);
-		batteryPaint.setAntiAlias(true);
-		batteryPaint.setStrokeCap(Paint.Cap.ROUND);
+		Path graphPath = new Path();
+		Paint graphPaint = new Paint();
+		graphPaint.setStyle(Paint.Style.STROKE);
+		graphPath.moveTo(leftMargin, start);
+		graphPaint.setColor(0xff2299cc);
+		graphPaint.setAntiAlias(true);
+		graphPaint.setStrokeCap(Paint.Cap.ROUND);
 
-		batteryPaint.setStrokeWidth(this.getStrokeWidth());
+		graphPaint.setStrokeWidth(this.getStrokeWidth());
 		
 		for ( InternalStats statsRecord : this.getRecords() ) {
 			
-			int currentStrength = statsRecord.getBatteryStrength();
-			double currentTime = statsRecord.getTime();
+			if ( this.graphType == "battery" ) {
+				currentValue = statsRecord.getBatteryStrength();
+			} else if ( this.graphType == "signal") {
+				currentValue = statsRecord.getSignalStrength();
+			}
+			currentTime = statsRecord.getTime();
 			
 			if ( previousTime == 0 ) {
 				dt = 0;
 			} else {
 				dt = currentTime - previousTime;
-				y = (int)dt + y * this._scale;
+				x = (int)dt + x * this._scale;
 			}
 			
-			slope = getSlope( previousTime, currentTime, previousStrength, currentStrength);
-
-			float batteryX = (float)currentStrength + (float)leftBatteryMargin;
-			if ( y == topMargin ) {
-				batteryPath.moveTo( batteryX, y);
+			y = (float)currentValue + start;
+			
+			if ( x == leftMargin ) {
+				graphPath.moveTo( x, y );
 			} else {
-				batteryPath.lineTo( batteryX, y);
+				graphPath.lineTo( x, y );
 			}
+			/*
+			slope = getSlope( previousTime, currentTime, previousStrength, currentStrength);
 			
-			slopeX = (float)slope + leftMargin;
-			slopePath.lineTo( slopeX, (float)y);
-
-			previousStrength = currentStrength;
+			slopeY = (float)slope + leftMargin;
+			slopePath.lineTo( (float)x, slopeY );
+			*/
+			previousValue = currentValue;
 			previousTime = currentTime;
 		}
 		
-		canvas.drawPath(slopePath, slopePaint);
-		canvas.drawPath(batteryPath, batteryPaint);
+		canvas.drawPath(graphPath, graphPaint);
 	}
 
 }

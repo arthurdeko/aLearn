@@ -10,7 +10,7 @@ public class SignalStrengthListener extends PhoneStateListener {
 	static final String TAG = "In3rds";
 	protected TelephonyManager telephonyManager;
 	public Context context;
-	public String value;
+	private int _value;
 	
 	public SignalStrengthListener( Context context ) { 
 		telephonyManager = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
@@ -18,6 +18,10 @@ public class SignalStrengthListener extends PhoneStateListener {
 	}
 	
 	public void onSignalStrengthsChanged(SignalStrength signalStrength) { 
-		value=Integer.toString( signalStrength.getGsmSignalStrength() );
+		this._value=signalStrength.getGsmSignalStrength();
+	}
+	
+	public int getValue() {
+		return this._value;
 	}
 }

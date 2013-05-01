@@ -4,18 +4,20 @@ public class InternalStats {
 	private int _id;
 	private double _time;
 	private int _batteryStrength;
+	private int _signalStrength;
 	
 	public InternalStats() {
-		
 	}
 	
-	public InternalStats(int _batteryStrength) {
+	public InternalStats(int _batteryStrength, int _signalStrength) {
 		this._batteryStrength=_batteryStrength;
+		this._signalStrength=_signalStrength;
 	}
 	
-	public InternalStats(int _batteryStrength, double _time) {
+	public InternalStats(int _batteryStrength, int _signalStrength, float _time) {
 		this._time=_time;
 		this._batteryStrength=_batteryStrength;
+		this._signalStrength=_signalStrength;
 	}	
 	
 	public int getID() {
@@ -42,4 +44,11 @@ public class InternalStats {
 		this._batteryStrength=_batteryStrength;
 	}
 	
+	public void setSignalStrength( int _signalStrength ) {
+		this._signalStrength=_signalStrength;
+	}
+	
+	public int getSignalStrength( ) {
+		return this._signalStrength;
+	}
 }

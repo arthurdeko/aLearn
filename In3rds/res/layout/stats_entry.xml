@@ -6,16 +6,15 @@
     
     <TextView
         android:id="@+id/datetime_entry"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="12sp" />
-    <TextView
-        android:layout_width="20dp"
-        android:layout_height="fill_parent"/>
+        android:layout_width="@dimen/time_width"
+        style="@style/StatsEntry" />
      <TextView
         android:id="@+id/battery_strength_entry"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="12sp" />
-    
+        android:layout_width="@dimen/battery_strength_width"
+		style="@style/StatsEntry" />
+     <TextView
+        android:id="@+id/signal_strength_entry"
+        android:layout_width="@dimen/signal_strength_width"
+        style="@style/StatsEntry" />
+     
 </LinearLayout>

@@ -1,36 +1,24 @@
 package com.jilgen.in3rds;
 
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
-import android.widget.TextView;
 import com.jilgen.in3rds.InternalStatistics;
-import com.jilgen.in3rds.SignalStrengthListener;
 import com.jilgen.in3rds.SimpleIntentService;
-import android.widget.Toast;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.os.Handler;
-import android.text.format.Time;
 import com.jilgen.in3rds.R;
-import com.jilgen.in3rds.BatteryValues;
 import android.widget.RelativeLayout;
 import com.jilgen.in3rds.StatGraph;
 import com.jilgen.in3rds.StatsDatabaseHandler;
-import com.jilgen.in3rds.BatteryStrength;
 import com.jilgen.in3rds.InternalStats;
 import com.jilgen.in3rds.SettingsActivity;
 import com.jilgen.in3rds.StatTableActivity;
 import android.content.SharedPreferences;
 import android.view.MenuItem;
-import android.content.BroadcastReceiver;
 import java.util.List;
 
 public class MainActivity extends Activity {
@@ -42,7 +30,8 @@ public class MainActivity extends Activity {
 	InternalStatistics internalStatistics;
 	private SharedPreferences settings;
 	boolean isBound;
-	private StatGraph statsGraphView;
+	private StatGraph batteryGraphView;
+	private StatGraph signalGraphView;
 	private int _pollingInterval = 10;
 	private float _scale = 1;
 	final Handler handler = new Handler();
@@ -118,17 +107,30 @@ public class MainActivity extends Activity {
 	
 	public void updateGraphView() {
 		final RelativeLayout mainLayout = (RelativeLayout) findViewById(R.id.main_layout);
-	    mainLayout.removeView(statsGraphView);
+	    mainLayout.removeView(batteryGraphView);
+	    mainLayout.removeView(signalGraphView);
 
        	StatsDatabaseHandler db = new StatsDatabaseHandler(this);
-	    List<InternalStats> records = db.getAllBatteryStrengths();
-	    db.close();
+	    List<InternalStats> batteryRecords = db.getAllBatteryStrengths();
 	    
-	    Log.d(TAG, "Records count in Main "+records.size());
-	    statsGraphView = new StatGraph(this);
-	    statsGraphView.setRecords(records);
-	    statsGraphView.setScale(this.getScaleSetting());
-    	mainLayout.addView(statsGraphView);
+	    Log.d(TAG, "Records count in Main "+batteryRecords.size());
+	    batteryGraphView = new StatGraph(this);
+	    batteryGraphView.setRecords(batteryRecords);
+	    batteryGraphView.setScale(this.getScaleSetting());
+	    batteryGraphView.start=30;
+    	mainLayout.addView(batteryGraphView);
+    	
+	    List<InternalStats> signalRecords = db.getAllSignalStrengths();
+	    
+	    Log.d(TAG, "Records count in Main "+signalRecords.size());
+	    signalGraphView = new StatGraph(this);
+	    signalGraphView.setRecords(batteryRecords);
+	    signalGraphView.setScale(this.getScaleSetting());
+	    signalGraphView.start=120;
+	    signalGraphView.graphType="signal";
+    	mainLayout.addView(signalGraphView);
+    	
+    	db.close();
 	}
 		
 	public void onClickSettingsMenu(MenuItem item) {

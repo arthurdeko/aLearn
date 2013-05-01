@@ -2,27 +2,27 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="20dp"
+    android:layout_marginTop="0dp"
     android:layout_marginBottom="5dp" >
     <LinearLayout 
     android:orientation="horizontal"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content" >
     <TextView
-        android:id="@+id/datetime_entry"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="12sp"
-        android:text="Time" />
-    <TextView
-        android:layout_width="20dp"
-        android:layout_height="fill_parent"/>
+        android:id="@+id/time_entry"
+        style="@style/StatsHeader"
+        android:text="Time"
+        android:layout_width="@dimen/time_width" />
      <TextView
         android:id="@+id/battery_strength_entry"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="12sp"
-        android:text="Battery Strength" />
+        style="@style/StatsHeader"
+        android:text="Battery"
+        android:layout_width="@dimen/battery_strength_width" />
+    <TextView
+        android:id="@+id/signal_strength_entry"
+        style="@style/StatsHeader"
+        android:text="Signal"
+        android:layout_width="@dimen/signal_strength_width" />
     </LinearLayout>
     <ListView
         android:id="@android:id/android:list"

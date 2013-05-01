@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!--
         Base application theme, dependent on API level. This theme is replaced
@@ -16,5 +16,26 @@
     <style name="AppTheme" parent="AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
-
+    <style name="StatsEntry">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:paddingLeft">2dp</item>
+        <item name="android:paddingRight">2dp</item>
+    </style>
+    <style name="StatsHeader">
+        <item name="android:textSize">14sp</item>
+        <item name="android:paddingLeft">2dp</item>
+        <item name="android:paddingRight">2dp</item>
+        <item name="android:background">@drawable/header_drawable</item>
+        <item name="android:layout_height">20dp</item>
+    </style>
+    <style name="SettingsEntry">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:width">@dimen/numeric_setting</item>
+        <item name="android:inputType">numberDecimal</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+    
 </resources>

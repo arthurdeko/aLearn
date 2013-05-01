@@ -12,6 +12,7 @@ import android.util.Log;
 import com.jilgen.in3rds.BatteryStrength;
 import com.jilgen.in3rds.BatteryValues;
 import com.jilgen.in3rds.MainActivity;
+import com.jilgen.in3rds.SignalStrengthListener;
 import java.lang.Math;
 
 public class SimpleIntentService extends IntentService {
@@ -35,6 +36,7 @@ public class SimpleIntentService extends IntentService {
 		Log.i(TAG,"Service Started");
 
 		final BatteryStrength batteryStrength = new BatteryStrength(this.context);
+		final SignalStrengthListener signalStrengthListener = new SignalStrengthListener(this.context);
 		final Handler handler = new Handler();
 		final Runnable r = new Runnable()
 		{
@@ -49,7 +51,7 @@ public class SimpleIntentService extends IntentService {
             
 				StatsDatabaseHandler db = new StatsDatabaseHandler(context);
 				
-				db.addStat(new InternalStats(batteryStrength.getValue()));	        	
+				db.addStat(new InternalStats(batteryStrength.getValue(), signalStrengthListener.getValue()));	        	
             
 				db.close();
 				

@@ -11,31 +11,9 @@
 
     <EditText
         android:id="@+id/editIntervalText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:width="@dimen/numeric_setting"
-        android:inputType="numberDecimal"
-        android:textSize="14sp" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView1"
-        android:layout_below="@+id/editIntervalText"
-        android:text="Battery Scale"
-        android:paddingBottom="@dimen/setting_pad" />
-    
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView1"
-        android:layout_below="@+id/editScaleText"
-        android:text="Battery Stroke"
-        android:paddingBottom="@dimen/setting_pad" />
+        style="@style/SettingsEntry"/>
 
     <TextView
         android:id="@+id/textView1"
@@ -44,27 +22,23 @@
         android:layout_alignBottom="@+id/editIntervalText"
         android:layout_alignRight="@+id/editIntervalText"
         android:text="@string/interval_settings"
-        android:textSize="14sp" 
-        android:paddingBottom="@dimen/setting_pad"/>
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView1"
+        android:layout_below="@+id/textView1"
+        android:layout_marginTop="20dp"
+        android:text="Scale" />
 
     <EditText
         android:id="@+id/editScaleText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/SettingsEntry"
+        android:layout_alignBaseline="@+id/textView2"
         android:layout_alignBottom="@+id/textView2"
-        android:layout_alignLeft="@+id/editIntervalText"
-        android:width="@dimen/numeric_setting"
-        android:inputType="numberDecimal"
-        android:textSize="14sp" />
-
-    <EditText
-        android:id="@+id/editBarWidthText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/textView3"
-        android:layout_alignLeft="@+id/editScaleText"
-        android:width="@dimen/numeric_setting"
-        android:inputType="numberDecimal"
-        android:textSize="14sp" />
+        android:layout_alignRight="@+id/textView1"
+        android:ems="10" />
 
 </RelativeLayout>
