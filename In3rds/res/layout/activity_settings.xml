@@ -8,7 +8,12 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:id="@+id/activity_settings"
     tools:context=".SettingsActivity" >
-
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignTop="@+id/editIntervalText"
+        android:orientation="vertical" >
     <EditText
         android:id="@+id/editIntervalText"
         android:layout_alignParentRight="true"
@@ -41,4 +46,21 @@
         android:layout_alignRight="@+id/textView1"
         android:ems="10" />
 
+    <TextView
+        android:id="@+id/TextView01"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView2"
+        android:layout_below="@+id/editScaleText"
+        android:layout_marginTop="20dp"
+        android:text="Scale" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignTop="@+id/editIntervalText"
+        android:orientation="vertical" >
+    </LinearLayout>
+	</LinearLayout>
 </RelativeLayout>

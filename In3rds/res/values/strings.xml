@@ -15,5 +15,10 @@
     <string name="title_activity_stat_table">Table View</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="title_activity_settings_list">SettingsListActivity</string>
+    <string name="title_activity_main_configuration">MainConfiguration</string>
+    <string name="title_config_main">Main Configuration</string>
+    <string name="title_config_graphs">Graph Configuration</string>
+    <string name="title_config_services">Service Configuration</string>
 
 </resources>

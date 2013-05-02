@@ -67,21 +67,9 @@ public class StatGraph extends View {
 		int recordCount = this.getRecords().size();
 		Log.d(TAG, "Drawing "+recordCount);
 
-		int previousValue = 100;
 		double previousTime = 0;
-		
-		ShapeDrawable.ShaderFactory sf = new ShapeDrawable.ShaderFactory() {
-		    @Override
-		    public Shader resize(int width, int height) {
-		        LinearGradient gradient = new LinearGradient(0, 0, width, height, 
-		            new int[] { 0x44449958, 0xee449958, 0xaa449958 }, 
-		            new float[] { 0.0f, 0.90f, 1.0f },
-		            Shader.TileMode.REPEAT);
-		        return gradient;
-		    }
-		};
-		
-		int leftMargin = 5;
+				
+		int leftMargin = 20;
 		float x = leftMargin;
 		float y = start;
 		this.setStrokeWidth(4);
@@ -90,12 +78,26 @@ public class StatGraph extends View {
 		int currentValue = 0;
 		
 		Path graphPath = new Path();
-		Paint graphPaint = new Paint();
-		graphPaint.setStyle(Paint.Style.STROKE);
 		graphPath.moveTo(leftMargin, start);
+		Paint graphPaint = new Paint();
+		
+		graphPaint.setStyle(Paint.Style.STROKE);
 		graphPaint.setColor(0xff2299cc);
+		
 		graphPaint.setAntiAlias(true);
 		graphPaint.setStrokeCap(Paint.Cap.ROUND);
+		
+
+		Path axisPathX = new Path();
+		axisPathX.moveTo(leftMargin, start);
+
+		Path axisPathY = new Path();
+		axisPathY.moveTo(leftMargin, start);
+		axisPathY.lineTo(leftMargin, 100);	
+		
+		Paint axisPaint = new Paint();
+		axisPaint.setColor(0xff000000);
+		axisPaint.setStyle(Paint.Style.STROKE);
 
 		graphPaint.setStrokeWidth(this.getStrokeWidth());
 		
@@ -115,23 +117,27 @@ public class StatGraph extends View {
 				x = (int)dt + x * this._scale;
 			}
 			
-			y = (float)currentValue + start;
+			y = start - (float)currentValue;
 			
 			if ( x == leftMargin ) {
 				graphPath.moveTo( x, y );
 			} else {
 				graphPath.lineTo( x, y );
 			}
+			
+			axisPathX.lineTo(x, start);
+			
 			/*
 			slope = getSlope( previousTime, currentTime, previousStrength, currentStrength);
 			
 			slopeY = (float)slope + leftMargin;
 			slopePath.lineTo( (float)x, slopeY );
 			*/
-			previousValue = currentValue;
 			previousTime = currentTime;
 		}
 		
+		canvas.drawPath(axisPathY, axisPaint);
+		canvas.drawPath(axisPathX, axisPaint);
 		canvas.drawPath(graphPath, graphPaint);
 	}
 

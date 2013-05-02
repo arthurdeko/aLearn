@@ -113,20 +113,25 @@ public class MainActivity extends Activity {
        	StatsDatabaseHandler db = new StatsDatabaseHandler(this);
 	    List<InternalStats> batteryRecords = db.getAllBatteryStrengths();
 	    
-	    Log.d(TAG, "Records count in Main "+batteryRecords.size());
+	    Log.d(TAG, "Records count in Main " + batteryRecords.size());
 	    batteryGraphView = new StatGraph(this);
 	    batteryGraphView.setRecords(batteryRecords);
-	    batteryGraphView.setScale(this.getScaleSetting());
-	    batteryGraphView.start=30;
+	    batteryGraphView.setScaleX(this.getScaleSetting());
+	    batteryGraphView.setPivotX(0);
+	    batteryGraphView.start=120;
+	    batteryGraphView.graphType="battery";
     	mainLayout.addView(batteryGraphView);
     	
 	    List<InternalStats> signalRecords = db.getAllSignalStrengths();
 	    
-	    Log.d(TAG, "Records count in Main "+signalRecords.size());
+	    float scale = 3;
+	    
+	    Log.d(TAG, "Records count in Main " + signalRecords.size());
 	    signalGraphView = new StatGraph(this);
-	    signalGraphView.setRecords(batteryRecords);
-	    signalGraphView.setScale(this.getScaleSetting());
-	    signalGraphView.start=120;
+	    signalGraphView.setRecords(signalRecords);
+	    signalGraphView.setScaleX(this.getScaleSetting());
+	    signalGraphView.setPivotX(0);
+	    signalGraphView.start=240;
 	    signalGraphView.graphType="signal";
     	mainLayout.addView(signalGraphView);
     	
@@ -134,7 +139,7 @@ public class MainActivity extends Activity {
 	}
 		
 	public void onClickSettingsMenu(MenuItem item) {
-		Intent intent = new Intent(this, SettingsActivity.class);
+		Intent intent = new Intent(this, MainConfiguration.class);
 	    startActivity(intent);
 	}
 	
