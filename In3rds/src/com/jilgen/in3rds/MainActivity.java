@@ -46,8 +46,11 @@ public class MainActivity extends Activity {
 		
         MainActivity.context = getApplicationContext();
          
+		Intent intent = new Intent(this, SimpleIntentService.class);
+		startService(intent);
+        
 		setContentView(R.layout.activity_main);
-		createdCounter++;
+
 		final Runnable r = new Runnable () {
 			public void run() {
 				updateGraphView();
@@ -55,9 +58,6 @@ public class MainActivity extends Activity {
 			}
 		};
 		this.handler.postDelayed(r, this._pollingInterval * 1000);
-		
-		Intent intent = new Intent(this, SimpleIntentService.class);
-		startService(intent);
 		
 		this.updateGraphView();
         

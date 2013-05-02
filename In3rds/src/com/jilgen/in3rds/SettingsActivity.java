@@ -65,8 +65,8 @@ public class SettingsActivity extends Activity {
 	}
 	
 	private void _updateSettings() {
-		int pollingInterval = Integer.parseInt(intervalEdit.getText().toString());
-		float scale = Float.parseFloat(scaleEdit.getText().toString());
+		int pollingInterval = Integer.parseInt(this.intervalEdit.getText().toString());
+		float scale = Float.parseFloat(this.scaleEdit.getText().toString());
 		
 		this.settings = getSharedPreferences(PREFS_FILE, 0);
 		this.editor=settings.edit();
