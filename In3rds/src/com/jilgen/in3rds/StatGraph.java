@@ -32,6 +32,12 @@ public class StatGraph extends View {
 	private int _lineColor;
 	private int _axisColor;
 	
+	private final Path testCubicPath = new Path();
+	private final Paint testCubicPaint = new Paint();
+	private final Path testLinePath = new Path();
+	private final Path controlPath1 = new Path();
+	private final Path controlPath2 = new Path();
+	
 	public StatGraph(Context context) {
 		super(context);
 		Log.d(TAG, "Constructed");
@@ -83,6 +89,55 @@ public class StatGraph extends View {
 		int recordCount = this.getRecords().size();
 		Log.d(TAG, "Drawing "+recordCount);
 
+		testCubicPaint.setStyle(Paint.Style.STROKE);
+		testCubicPaint.setColor(Color.RED);
+		testCubicPaint.setAntiAlias(true);
+		testCubicPaint.setStrokeCap(Paint.Cap.ROUND);
+		testCubicPaint.setStrokeWidth( 2 );
+		
+		float controlX2 = 300;
+		float controlY2 = 150;
+		float startX = _startX;
+		float startY = _startY;
+		float controlX1 = startX;
+		float controlY1 = startY;
+		
+		testLinePath.moveTo( _startX, _startY );
+		testCubicPath.moveTo( _startX, _startY);
+		
+		int[] values = { 25, 10, 45, 25, 80, 95, 36, 50, 34, 67, 19, 37, 40 };
+		float Dt = 20;
+		float slope = 0;
+		float prevVal = 0;
+		float y = 0;
+		
+		for ( int value : values ) {
+			controlPath1.moveTo(startX, y);
+
+			
+			startX+=Dt;
+			y = this._startY - value;
+						
+			slope = prevVal - y / Dt;
+			
+			controlX1 = startX + ( Dt / 2);
+			controlY1 = y - 1;
+			
+			controlPath1.lineTo(controlX1, controlY1 );
+			
+			controlX2 = startX - ( Dt /2 );
+			controlY2 = y + slope;
+			
+			testCubicPath.cubicTo( controlX1, controlY1, controlX2, controlY2, startX, y );
+			testLinePath.lineTo(startX,  y);
+			controlPath2.moveTo(startX, y);
+			controlPath2.lineTo(controlX2, controlY2);
+			
+			prevVal=value;
+			
+		}
+		
+		
 		double previousTime = 0;
 				
 		int leftMargin = 20;
@@ -106,9 +161,8 @@ public class StatGraph extends View {
 		axisPathX.lineTo(canvasWidth, this._startY);
 		axisPathY.moveTo(this._startX, this._startY);
 		axisPathY.lineTo(this._startX, this._startY - this._graphHeight );	
-		
+				
 		for ( InternalStats statsRecord : this.getRecords() ) {
-			float y = 0;
 			
 			if ( this.graphType == "battery" ) {
 				value = statsRecord.getBatteryStrength();
@@ -140,5 +194,9 @@ public class StatGraph extends View {
 		canvas.drawPath(graphPath, graphPaint);
 		canvas.drawPath(axisPathX, axisPaint);
 		canvas.drawPath(axisPathY, axisPaint);
+		canvas.drawPath(testLinePath, axisPaint);
+		canvas.drawPath(testCubicPath, testCubicPaint);
+		canvas.drawPath(controlPath1, axisPaint);
+		canvas.drawPath(controlPath2, axisPaint);
 	}
 }

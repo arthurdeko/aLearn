@@ -51,7 +51,7 @@ public class SimpleIntentService extends IntentService {
             
 				StatsDatabaseHandler db = new StatsDatabaseHandler(context);
 				
-				db.addStat(new InternalStats(batteryStrength.getValue(), signalStrengthListener.getValue()));	        	
+				db.addStat( new InternalStats( batteryStrength.getValue(), signalStrengthListener.getValue() ) );	        	
             
 				db.close();
 				
