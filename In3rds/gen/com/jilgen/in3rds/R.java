@@ -44,16 +44,15 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
     }
     public static final class id {
         public static final int TextView01=0x7f090008;
-        public static final int action_reset=0x7f09000f;
-        public static final int action_settings=0x7f09000e;
+        public static final int action_reset=0x7f09000e;
+        public static final int action_settings=0x7f09000d;
         public static final int activity_settings=0x7f090003;
         public static final int battery_strength_entry=0x7f09000a;
         public static final int container=0x7f090002;
-        public static final int datetime_entry=0x7f09000d;
+        public static final int datetime_entry=0x7f09000c;
         public static final int editIntervalText=0x7f090004;
         public static final int editScaleText=0x7f090007;
         public static final int main_layout=0x7f090000;
-        public static final int section_label=0x7f09000c;
         public static final int signal_strength_entry=0x7f09000b;
         public static final int table_button=0x7f090001;
         public static final int textView1=0x7f090005;
@@ -68,12 +67,10 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int config=0x7f030004;
         public static final int config_graphs=0x7f030005;
         public static final int config_services=0x7f030006;
-        public static final int fragment_main_configuration_dummy=0x7f030007;
-        public static final int stats_entry=0x7f030008;
+        public static final int stats_entry=0x7f030007;
     }
     public static final class menu {
         public static final int main=0x7f080000;
-        public static final int main_configuration=0x7f080001;
     }
     public static final class string {
         public static final int action_reset=0x7f060002;

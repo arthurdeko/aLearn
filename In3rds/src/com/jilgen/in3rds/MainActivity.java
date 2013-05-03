@@ -18,6 +18,7 @@ import com.jilgen.in3rds.InternalStats;
 import com.jilgen.in3rds.SettingsActivity;
 import com.jilgen.in3rds.StatTableActivity;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.view.MenuItem;
 import java.util.List;
 
@@ -110,28 +111,35 @@ public class MainActivity extends Activity {
 	    mainLayout.removeView(batteryGraphView);
 	    mainLayout.removeView(signalGraphView);
 
+	    float leftMargin = 10;
+	    
        	StatsDatabaseHandler db = new StatsDatabaseHandler(this);
 	    List<InternalStats> batteryRecords = db.getAllBatteryStrengths();
 	    
 	    Log.d(TAG, "Records count in Main " + batteryRecords.size());
+	    
 	    batteryGraphView = new StatGraph(this);
 	    batteryGraphView.setRecords(batteryRecords);
 	    batteryGraphView.setScaleX(this.getScaleSetting());
 	    batteryGraphView.setPivotX(0);
-	    batteryGraphView.start=120;
+	    batteryGraphView.setLocation( leftMargin, 200 );
+	    batteryGraphView.setGraphHeight(120);
+	    batteryGraphView.setLineColor(Color.GREEN);
+	    batteryGraphView.setAxisColor(Color.BLACK);
 	    batteryGraphView.graphType="battery";
     	mainLayout.addView(batteryGraphView);
     	
 	    List<InternalStats> signalRecords = db.getAllSignalStrengths();
-	    
-	    float scale = 3;
-	    
+	    	    
 	    Log.d(TAG, "Records count in Main " + signalRecords.size());
 	    signalGraphView = new StatGraph(this);
 	    signalGraphView.setRecords(signalRecords);
 	    signalGraphView.setScaleX(this.getScaleSetting());
 	    signalGraphView.setPivotX(0);
-	    signalGraphView.start=240;
+	    signalGraphView.setLocation( leftMargin, 340 );
+	    signalGraphView.setGraphHeight(120);
+	    signalGraphView.setAxisColor(Color.BLACK);
+	    signalGraphView.setLineColor(Color.BLUE);
 	    signalGraphView.graphType="signal";
     	mainLayout.addView(signalGraphView);
     	
@@ -139,7 +147,7 @@ public class MainActivity extends Activity {
 	}
 		
 	public void onClickSettingsMenu(MenuItem item) {
-		Intent intent = new Intent(this, MainConfiguration.class);
+		Intent intent = new Intent(this, SettingsActivity.class);
 	    startActivity(intent);
 	}
 	

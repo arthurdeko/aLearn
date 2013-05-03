@@ -12,6 +12,7 @@ import android.graphics.Paint;
 import com.jilgen.in3rds.InternalStats;
 import java.util.List;
 import java.util.Random;
+import android.graphics.Color;
 
 public class StatGraph extends View {
 
@@ -20,33 +21,22 @@ public class StatGraph extends View {
 	private float _scale = 1;
 	private float _strokeWidth = 1;
 	public String graphType = "battery";
-	private float _start = 20;
+	private float _graphHeight;
+	private float _startX = 20;
+	private float _startY = 120;
+	private final Path axisPathX = new Path();
+	private final Path axisPathY = new Path();
+	private final Path graphPath = new Path();
+	private final Paint graphPaint = new Paint();
+	private final Paint axisPaint = new Paint();
+	private int _lineColor;
+	private int _axisColor;
 	
 	public StatGraph(Context context) {
 		super(context);
 		Log.d(TAG, "Constructed");
 	}
 
-	private float getSlope( double t1, double t2, int y1, int y2 ) {
-		double slope=0;
-		double timeDelta = t1 - t2;
-		double strengthDelta = y1 - y2;
-		if ( timeDelta == 0 ) {
-			slope=0;
-		} else {
-			slope=strengthDelta / timeDelta;
-		}
-		return Math.abs((float)slope);
-	}
-	
-	public void setStart( float _start ) {
-		this._start = _start;
-	}
-
-	public float getStart( ) {
-		return this._start;
-	}
-	
 	public void setScale( float _scale ) {
 		this._scale=_scale;
 	}
@@ -71,6 +61,23 @@ public class StatGraph extends View {
 		this._records=_records;
 	}
 	
+	public void setLocation( float x, float y ) {
+		this._startX=x;
+		this._startY=y;
+	}
+	
+	public void setGraphHeight( float _height ) {
+		this._graphHeight=_height;
+	}
+	
+	public void setLineColor( int color ) {
+		this._lineColor=color;
+	}
+
+	public void setAxisColor( int color ) {
+		this._axisColor=color;
+	}
+
 	protected void onDraw(Canvas canvas) {
 
 		int recordCount = this.getRecords().size();
@@ -84,30 +91,21 @@ public class StatGraph extends View {
 		double dt = 0;
 		double currentTime = 0;
 		int value = 0;
-		
-		Path graphPath = new Path();
-		graphPath.moveTo(leftMargin, start);
-		Paint graphPaint = new Paint();
-		
+		int canvasWidth = canvas.getWidth();
+				
+		graphPath.moveTo(this._startX, this._startY);
 		graphPaint.setStyle(Paint.Style.STROKE);
-		graphPaint.setColor(0xff2299cc);
-		
+		graphPaint.setColor(this._lineColor);
 		graphPaint.setAntiAlias(true);
 		graphPaint.setStrokeCap(Paint.Cap.ROUND);
+		graphPaint.setStrokeWidth(this._strokeWidth);
 		
-
-		Path axisPathX = new Path();
-		axisPathX.moveTo(leftMargin, start);
-
-		Path axisPathY = new Path();
-		axisPathY.moveTo(leftMargin, start);
-		axisPathY.lineTo(leftMargin, 100);	
-		
-		Paint axisPaint = new Paint();
-		axisPaint.setColor(0xff000000);
+		axisPaint.setColor(this._axisColor);
 		axisPaint.setStyle(Paint.Style.STROKE);
-
-		graphPaint.setStrokeWidth(this.getStrokeWidth());
+		axisPathX.moveTo(this._startX, this._startY);
+		axisPathX.lineTo(canvasWidth, this._startY);
+		axisPathY.moveTo(this._startX, this._startY);
+		axisPathY.lineTo(this._startX, this._startY - this._graphHeight );	
 		
 		for ( InternalStats statsRecord : this.getRecords() ) {
 			float y = 0;
@@ -117,6 +115,11 @@ public class StatGraph extends View {
 			} else if ( this.graphType == "signal") {
 				value = statsRecord.getSignalStrength();
 			}
+			
+			if ( currentTime == 0 ) {
+				graphPath.moveTo(this._strokeWidth + (float)this._startX, (float)this._startY - (float)value);
+			}
+			
 			currentTime = statsRecord.getTime();
 			
 			if ( previousTime == 0 ) {
@@ -126,7 +129,7 @@ public class StatGraph extends View {
 			}
 			x = (int)dt + x;
 			
-			y = this._start - (float)value;
+			y = this._startY - (float)value;
 			//Random random = new Random();
 			//y = this._start - (float)random.nextInt(100);
 			
@@ -135,5 +138,7 @@ public class StatGraph extends View {
 			previousTime = currentTime;
 		}		
 		canvas.drawPath(graphPath, graphPaint);
+		canvas.drawPath(axisPathX, axisPaint);
+		canvas.drawPath(axisPathY, axisPaint);
 	}
 }
